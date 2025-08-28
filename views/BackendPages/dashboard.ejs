@@ -1,0 +1,192 @@
+  
+  <% layout('backend_boilerplate.ejs') -%>
+  <link rel="stylesheet" href="/CSS/dashboard.css">
+  <!-- Dashboard Content Grid -->
+            <section class="dashboard-grid">
+
+                <!-- Today's Sales Summary -->
+                <div class="card" style="grid-column: span 1 / span 2;">
+                    <div class="card-header">
+                        <span class="card-title">Today's Sales</span>
+                        <span class="card-subtitle">Sales Summary</span>
+                    </div>
+                    <div class="summary-grid">
+                        <div class="summary-card">
+                            <div class="summary-icon" style="background-color: #5533a8;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-dollar-sign">
+                                    <line x1="12" x2="12" y1="2" y2="22" />
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                </svg>
+                            </div>
+                            <span class="summary-value">$5k</span>
+                            <span class="summary-text">Total Sales</span>
+                            <span class="summary-growth">+10% from yesterday</span>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-icon" style="background-color: #5533a8;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-file-text">
+                                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                </svg>
+                            </div>
+                            <span class="summary-value">500</span>
+                            <span class="summary-text">Total Order</span>
+                            <span class="summary-growth">-6% from yesterday</span>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-icon" style="background-color: #5533a8;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-package">
+                                    <path d="m7.5 4.27l9 5.17" />
+                                    <path
+                                        d="M21 8.5v5.5c0 1.5-.5 2-2 2h-1c-1.5 0-2-.5-2-2V8.5c0-1.5.5-2 2-2h1c1.5 0 2 .5 2 2z" />
+                                    <path
+                                        d="M3 14.5v-5c0-1.5.5-2 2-2h1c1.5 0 2 .5 2 2v5c0 1.5-.5 2-2 2h-1c-1.5 0-2-.5-2-2z" />
+                                    <path d="M12 18.5V11l-7.5-4.33" />
+                                    <path d="M7.5 15.5L12 18.5l4.5-3" />
+                                </svg>
+                            </div>
+                            <span class="summary-value">9</span>
+                            <span class="summary-text">Product Sold</span>
+                            <span class="summary-growth">+2% from yesterday</span>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-icon" style="background-color: #5533a8;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-user-plus">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <line x1="19" x2="19" y1="8" y2="14" />
+                                    <line x1="22" x2="16" y1="11" y2="11" />
+                                </svg>
+                            </div>
+                            <span class="summary-value">12</span>
+                            <span class="summary-text">New Customer</span>
+                            <span class="summary-growth">+2% from yesterday</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Level Bar Chart -->
+                <div class="card chart-card">
+                    <span class="card-title">Level</span>
+                    <canvas id="levelChart" width="400" height="200"></canvas>
+                </div>
+
+                <!-- Top Products Table -->
+                <div class="card" style="grid-column: span 1 / span 2;">
+                    <div class="card-header">
+                        <span class="card-title">Top Products</span>
+                    </div>
+                    <div class="table-container">
+                        <table class="product-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Popularity</th>
+                                    <th>Sales</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>01</td>
+                                    <td>Home Decore Range</td>
+                                    <td>
+                                        <div class="popularity-bar">
+                                            <div class="popularity-fill" style="width: 80%;"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="sales-tag"
+                                            style="color: #6ee7b7; background-color: rgba(110, 231, 183, 0.2);">48%</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>02</td>
+                                    <td>Disney Princess Dress</td>
+                                    <td>
+                                        <div class="popularity-bar">
+                                            <div class="popularity-fill" style="width: 50%;"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="sales-tag"
+                                            style="color: #fca5a5; background-color: rgba(252, 165, 165, 0.2);">17%</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>03</td>
+                                    <td>Bathroom Essentials</td>
+                                    <td>
+                                        <div class="popularity-bar">
+                                            <div class="popularity-fill" style="width: 70%;"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="sales-tag"
+                                            style="color: #60a5fa; background-color: rgba(96, 165, 250, 0.2);">19%</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>04</td>
+                                    <td>Apple Smartwatch</td>
+                                    <td>
+                                        <div class="popularity-bar">
+                                            <div class="popularity-fill" style="width: 60%;"></div>
+                                        </div>
+                                    </td>
+                                    <td><span class="sales-tag"
+                                            style="color: #c4b5fd; background-color: rgba(196, 181, 253, 0.2);">29%</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Customer Fulfillment Area Chart -->
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <span class="card-title">Customer Fulfillment</span>
+                    </div>
+                    <canvas id="fulfillmentChart" width="400" height="200"></canvas>
+                    <div
+                        style="display: flex; justify-content: space-between; font-size: 0.875rem; color: var(--light-gray); margin-top: 1rem;">
+                        <span>Last Month: $4,087</span>
+                        <span>This Month: $5,506</span>
+                    </div>
+                </div>
+
+                <!-- Earnings Doughnut Chart -->
+                <div class="card chart-card">
+                    <span class="card-title">Earnings</span>
+                    <span class="card-subtitle">Total Expense</span>
+                    <span class="summary-value" style="font-size: 2.25rem;">$6,078.76</span>
+                    <span class="summary-growth" style="color: #10b981; font-size: 1rem; font-weight: 600;">Profit is
+                        48% More than last Month</span>
+                    <canvas id="earningsChart" width="200" height="200"></canvas>
+                </div>
+
+                <!-- Visitor Insights Line Chart -->
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <span class="card-title">Visitor Insights</span>
+                        <span class="card-subtitle"
+                            style="display: flex; align-items: center; gap: 0.5rem; color: #10b981;">
+                            <div style="width: 8px; height: 8px; background-color: #10b981; border-radius: 50%;"></div>
+                            New Visitors
+                        </span>
+                    </div>
+                    <canvas id="visitorsChart" width="400" height="200"></canvas>
+                </div>
+
+            </section>
+                <script src="/js/dashboard.js"></script>
+
+
+
+

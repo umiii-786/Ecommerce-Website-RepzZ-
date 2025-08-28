@@ -1,0 +1,27 @@
+
+<% if (error.length>0) { %>
+    <link rel="stylesheet" href="/CSS/includes/alert.css">
+    <div class="alert" style=" color: red;
+    border: 1px solid red;">
+    <%= console.log(error) %>
+    <div class="message"><%= error %></div>
+</div>
+
+<script src="">
+    setInterval(()=>{
+        document.querySelector('.message').innerHTML=''
+    },4000)
+</script>
+<% } %>
+
+<% if (success.length>0) { %>
+    <link rel="stylesheet" href="/CSS/includes/alert.css">
+    <div class="alert" style="border: 1px solid #0874d4; color: #0874d4;">
+            <div class="message"><%= success %></div>
+    </div>
+    <script src="">
+    setTimeout(()=>{
+        document.querySelector('.message').innerHTML=''
+    },4000)
+</script>
+<% } %>

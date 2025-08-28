@@ -1,0 +1,47 @@
+
+<%- layout('backend_boilerplate.ejs') %>
+<link rel="stylesheet" href="/CSS/sales.css">
+    <div class="page_container">
+        <div class="page-header">
+            <h1 class="page-title">Sales Report & Analytics</h1>
+        </div>
+
+        <section>
+            <h2 class="section-title">Key Metrics</h2>
+            <div class="metrics-grid" id="metrics-grid">
+                <!-- Metrics will be dynamically added here -->
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Sales Over Time</h2>
+            <div class="chart-container">
+                <canvas id="salesChart"></canvas>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Recent Sales</h2>
+            <div class="sales-table-container">
+                <table class="sales-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sales-table-body">
+                        <!-- Sales rows will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div id="status-message" class="message-box"></div>
+    </div>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/sales.js"></script>

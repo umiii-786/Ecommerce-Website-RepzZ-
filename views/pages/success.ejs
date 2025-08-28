@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Placed - G.R Repz</title>
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        :root {
+            --dark-background: radial-gradient(ellipse at bottom, #2b0c3f 0%, #0c0816 100%);
+            --glowing-purple: #a855f7;
+            --glowing-shadow: 0 0 20px rgba(139, 92, 246, 0.7);
+            --card-background: rgba(0, 0, 0, 0.4);
+            --card-border: rgba(139, 92, 246, 0.5);
+            --main-text-color: #fff;
+            --secondary-text-color: #d1d5db;
+            --button-color: #9333ea;
+            --accent-green: #10b981;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-background);
+            min-height: 100vh;
+            color: var(--main-text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        /* Container for the success message */
+        .success-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 3rem 2rem;
+            background-color: var(--card-background);
+            box-shadow: var(--glowing-shadow);
+            backdrop-filter: blur(5px);
+            border-radius: 1rem;
+            border: 1px solid var(--card-border);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Success icon */
+        .success-icon {
+            color: var(--accent-green);
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        /* Title and message */
+        .success-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+            letter-spacing: -0.05rem;
+        }
+
+        .success-message {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            color: var(--secondary-text-color);
+            margin-bottom: 2.5rem;
+        }
+
+        /* Action button */
+        .shop-button {
+            padding: 1rem 2.5rem;
+            background-color: var(--button-color);
+            color: white;
+            font-weight: 600;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none; /* For the link */
+            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+
+        .shop-button:hover {
+            background-color: var(--glowing-purple);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="success-container">
+        <div class="success-icon">✓</div>
+        <h1 class="success-title">Order Placed Successfully!</h1>
+        <p class="success-message">
+            Thank you for your purchase! Your order has been placed and your payment was processed successfully. We'll send you an email with the order details shortly.
+        </p>
+        <a href="/" class="shop-button">Continue Shopping</a>
+    </div>
+
+</body>
+</html>

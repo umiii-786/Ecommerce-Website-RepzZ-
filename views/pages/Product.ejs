@@ -1,0 +1,35 @@
+<% layout('boilerplate.ejs') -%>
+    <link rel="stylesheet" href="/CSS/product.css">
+    <style>
+        .next_previous_button_div {
+            display: flex;
+            justify-content: flex-end;
+            width: 90%;
+            margin: 20px 0px;
+        }
+        .next_previous_button_div>button{
+            margin: 0px 10px;
+        }
+    </style>
+    <main>
+        <h2 class="products-title">
+            <%= category %> Collection
+        </h2>
+        <p class="products-subtitle">Step up your street style</p>
+
+        <div class="categories-filter" id="category-buttons">
+
+        </div>
+
+        <!-- Product Grid -->
+        <section id="product-grid" class="product-grid">
+            <!-- Product cards will be inserted here by JavaScript -->
+        </section>
+    </main>
+    <script>
+        const allProducts =<%- JSON.stringify(AllProducts) %>
+        console.log(allProducts)
+        let categories =<%- JSON.stringify(categories) %>
+        console.log(categories)
+    </script>
+    <script src="/js/Product.js"></script>

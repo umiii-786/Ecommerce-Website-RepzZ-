@@ -1,0 +1,51 @@
+<%- layout('backend_boilerplate.ejs') %>
+    <link rel="stylesheet" href="/CSS/customer_message.css">
+    <div class="messages_container">
+        <div class="page-header">
+            <h1 class="page-title">Customer Messages</h1>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-layout">
+                <!-- Sidebar with conversations -->
+                <div class="chat-sidebar" id="sidebar">
+                    <ul class="conversation-list" id="conversation-list">
+                        <!-- Conversation items will be dynamically added here -->
+                    </ul>
+                </div>
+
+                <!-- Main chat area -->
+                <div class="chat-main">
+                    <div class="chat-header" id="chat-header">
+                        Select a conversation to start
+                    </div>
+                    <div class="message-area" id="message-area">
+                        <!-- Messages will be dynamically added here -->
+                    </div>
+                    <form class="message-form" id="message-form">
+                        <input type="text" id="message-input" class="message-input" placeholder="Type your message...">
+                        <button type="submit" class="send-button">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="status-message" class="message-box"></div>
+    </div>
+
+
+     <script src="/socket.io/socket.io.js"></script>
+        <script>
+               const userData=<%- JSON.stringify(user) %>;
+               console.log(userData)
+               const adminID=userData._id
+                const socket = io();
+                socket.emit('register_admin',adminID)
+                
+                socket.on('user_message',(from, message,user)=>{
+                    
+                })
+        </script>
+
+
+    <script src="/js/customer_message.js"></script>

@@ -1,0 +1,74 @@
+<% layout('backend_boilerplate.ejs') -%>
+    <link rel="stylesheet" href="/CSS/products.css">
+    <!-- Search and Filter Section -->
+    <form action="/product" method="GET" class="search-container">
+        <div class="search-input-group">
+            <label for="category" class="search-label">Category</label>
+            <select id="category" name="category" class="search-select">
+                <option value="All">All Categories</option>
+                <option value="Shoes">Shoes</option>
+                <option value="Clothing">Clothing</option>
+                <option value="Accessories">Accessories</option>
+            </select>
+        </div>
+
+        <div class="search-input-group">
+            <label for="product-name" class="search-label">Subcategory</label>
+            <input type="text" id="product-subCategory" name="subCategory" class="search-input"
+                placeholder="Search by SubCategory...">
+        </div>
+        <div class="search-input-group">
+            <label for="product-name" class="search-label">Product Name</label>
+            <input type="text" id="product-name" class="search-input" name="title" placeholder="Search by name...">
+        </div>
+        <button class="search-button">Search</button>
+    </form>
+
+    <div class="create-product-section">
+        <a href="/add_product" class="create-product-button">Add Product</a>
+    </div>
+
+    <div class="table-container">
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Subcategory</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                </tr>
+            </thead>
+            <tbody id="product-table-body">
+
+                <% for( let i=0; i < AllProducts.length; i++ ) { %>
+                    <tr>
+
+
+                        
+                        <td><%= AllProducts[i].title %></td>
+                        <td><%= AllProducts[i].category %> </td>
+                        <td><%= AllProducts[i].subCategory %> </td>
+                        <td><%= AllProducts[i].price %> </td>
+                        <td><%= AllProducts[i].available_stocks %></td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="/product/<%= AllProducts[i]._id %>" class="action-button view-button"
+                                    >View</button>
+                                <a class="action-button edit-button"
+                                    href="/product/<%= AllProducts[i]._id %>?_method=PUT"  >Edit</a>
+                                <a class="action-button delete-button"
+                                    href="/product/<%= AllProducts[i]._id %>?_method=delete" >Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <% } %>
+                        <!-- Product rows will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- Status Message Box -->
+    <!-- <div id="status-message" class="message-box"></div> -->
+    <!-- <script src="/js/manage_product.js"></script> -->

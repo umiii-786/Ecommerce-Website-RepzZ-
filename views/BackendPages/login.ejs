@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - G.R Repz</title>
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+     <link rel="stylesheet" href="/CSS/login.css">
+</head>
+
+<body>
+    <div class="container">
+        <%- include('../includes/flashMessage.ejs') %>
+        <h2 class="formHeading"><%= purpose!='Admin'?"Let's Login To the DashBoard":'Login For the Admin Panel' %> </h2>
+        <!-- Login Form -->
+        <form id="login-form" method="post" action=<%= purpose!='Admin'?"/user/login":'/admin/login' %> >
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" name="username" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-input" required>
+            </div>
+<% if (purpose!='Admin') { %>
+ 
+    <div class='decision_div'>
+        Not Yet Registered?
+        <a class="decision_button" href="/user/register">register</a>
+    </div>
+    
+    <% } %>
+            <button type="submit" class="form-button">Login</button>
+        </form>
+
+    </div>
+    
+
+
+</body>
+
+</html>

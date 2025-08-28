@@ -1,0 +1,7 @@
+  .alert {
+        width: 80%;
+        margin: 20px auto;
+        padding: 10px 30px;
+        background: transparent;
+        border-radius: 8px;
+    }

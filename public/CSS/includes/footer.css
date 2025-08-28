@@ -1,0 +1,84 @@
+        .footer {
+            width: 100%;
+            max-width: 56rem;
+            text-align: center;
+            margin-top: 5rem;
+        }
+
+        .footer p {
+            margin-bottom: 1rem;
+        }
+
+        .checkout-button {
+            background-color: #9333ea;
+            color: #ffffff;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+            transition: background-color 0.3s ease-in-out;
+            border: none;
+            cursor: pointer;
+        }
+
+        .checkout-button:hover {
+            background-color: #a855f7;
+        }
+
+        .button-glow {
+            box-shadow: 0 0 5px #a855f7, 0 0 10px #a855f7;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .button-glow:hover {
+            box-shadow: 0 0 8px #a855f7, 0 0 15px #a855f7, 0 0 20px #a855f7;
+            transform: translateY(-2px);
+        }
+
+        .footer-social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-link {
+            padding: 0.75rem;
+            background-color: #1f2937;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .social-link:hover {
+            background-color: #374151;
+        }
+
+        .icon-glow {
+            filter: drop-shadow(0 0 5px #a855f7) drop-shadow(0 0 10px #a855f7);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .icon-glow:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 8px #a855f7) drop-shadow(0 0 15px #a855f7);
+        }
+
+        .footer-designed-by {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            color: #9ca3af;
+        }
+
+        .footer-designed-by a {
+            color: #a855f7;
+            transition: text-decoration 0.3s ease-in-out;
+        }
+
+        .footer-designed-by a:hover {
+            text-decoration: underline;
+        }

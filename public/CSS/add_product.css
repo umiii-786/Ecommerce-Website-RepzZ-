@@ -1,0 +1,107 @@
+.formContainer {
+    width: 90%;
+
+    padding: 2rem;
+    backdrop-filter: blur(5px);
+    border-radius: 1rem;
+    margin-top: 20px;
+}
+
+.logo {
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    color: white;
+}
+
+.logo-color {
+    color: var(--glowing-purple);
+}
+
+h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--glowing-purple);
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+p.user-info {
+    font-size: 0.875rem;
+    color: var(--light-gray);
+    text-align: center;
+    margin-bottom: 1.5rem;
+    word-wrap: break-word;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.5rem;
+    width: 46%;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-input,
+.form-select {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: transparent;
+    border: 1px solid #444;
+    border-radius: 0.5rem;
+    color: white;
+    transition: border-color 0.2s ease-in-out;
+    box-sizing: border-box;
+}
+
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    border-color: var(--glowing-purple);
+}
+
+.form-select>option {
+    color: black;
+}
+
+.form-button {
+    width: 100%;
+    background-color: #9333ea;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+    font-size: 1.125rem;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: var(--glowing-shadow);
+}
+
+.form-button:hover {
+    background-color: var(--glowing-purple);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 1);
+}
+
+/* Message Box */
+.message-box {
+    background-color: transparent;
+    border: 1px solid var(--glowing-purple);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-align: center;
+    margin-top: 1rem;
+    word-wrap: break-word;
+    display: none;
+}
+
+#product-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}

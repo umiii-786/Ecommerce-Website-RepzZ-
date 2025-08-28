@@ -1,0 +1,101 @@
+<link rel="stylesheet" href="/CSS/includes/navbar.css">
+<style>
+    .cart_option_and_login_option {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        width: 100px;
+        height: 50px;
+        object-fit: contain;
+    }
+
+    .profile_logo {
+        width: 30px;
+        height: 40px;
+        object-fit: contain;
+        margin-left: 20px;
+    }
+
+    .profile_options {
+        width: 50px;
+        height: 40px;
+    }
+
+    .cart_button {
+        position: relative;
+    }
+
+    .countCartItem {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: purple;
+        /* width: 9px; */
+        padding: 3px 8px;
+        border-radius: 10px;
+        z-index: 10;
+    }
+</style>
+<header>
+    <a href="/">
+        <img src="/images/logo.PNG" alt="logo" class="logo" />
+        <!-- <h1 class="navbar-logo">
+                    <span class="text-white nav-link-glow">G.R</span> 
+                    <span class="text-purple-400 text-glow-purple">RepzZ</span>
+                </h1> -->
+    </a>
+    <nav class="nav">
+        <a href="/#Collections" class="nav-link-glow">Collections</a>
+        <a href="/#contact-us" class="nav-link-glow">Contact Us</a>
+        <a href="/#testonomials" class="nav-link-glow">Testonomials</a>
+    </nav>
+
+    <!-- Cart Icon -->
+    <div class="cart_option_and_login_option">
+
+
+        <div class="header-icons ">
+            <button onclick="toggleCartModal()" class="cart_button">
+                <span class="countCartItem">0</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-shopping-cart icon-glow">
+                    <circle cx="8" cy="21" r="1" />
+                    <circle cx="19" cy="21" r="1" />
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                </svg>
+            </button>
+            <button class="hamburger">
+                <!-- Hamburger icon for mobile menu -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-menu icon-glow">
+                    <line x1="4" x2="20" y1="12" y2="12" />
+                    <line x1="4" x2="20" y1="6" y2="6" />
+                    <line x1="4" x2="20" y1="18" y2="18" />
+                </svg>
+            </button>
+        </div>
+        <% if (user) { %>
+
+            <a href="/user/<%= user._id %>" class="profile_options">
+                <img src="/images/profileLogoRm.png" alt="profileLogo" class="profile_logo">
+            </a>
+
+            <a href="/user/logout" class="login_button button-glow">
+                🔙 Logout
+            </a>
+
+
+
+            <% } else if (user==undefined) { %>
+                <a href="/user/login" class="login_button button-glow">
+                    Login
+                </a>
+                <% } %>
+
+    </div>
+</header>

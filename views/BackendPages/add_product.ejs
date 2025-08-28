@@ -1,0 +1,506 @@
+<%- layout('backend_boilerplate.ejs') %>
+    <title>Add Product - G.R Repz</title>
+    <link rel="stylesheet" href="/CSS/add_product.css">
+
+    <style>
+        .dropdown-container {
+            position: relative;
+            display: inline-block;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .dropdown-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .dropdown-button {
+            display: inline-flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            padding: 0.5rem 1rem;
+            background-color: #fff;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+            outline: none;
+        }
+
+        .dropdown-button:hover {
+            background-color: #f9fafb;
+        }
+
+        .dropdown-button:focus {
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5), 0 0 #0000;
+            border-color: #6366f1;
+        }
+
+        .dropdown-button svg {
+            margin-left: 0.5rem;
+            margin-right: -0.25rem;
+            height: 1.25rem;
+            width: 1.25rem;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 0.5rem;
+            width: 14rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            background-color: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            outline: none;
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0.9);
+            transform-origin: top left;
+            visibility: hidden;
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0s linear 0.2s;
+        }
+
+        .dropdown-content.show {
+            visibility: visible;
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0s linear;
+        }
+
+        .dropdown-content .menu-item {
+            display: block;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: #374151;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+        }
+
+        .dropdown-content .menu-item:hover {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .select-dropdown-button {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 14rem;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            padding: 0.5rem 1rem;
+            background-color: #fff;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+            outline: none;
+        }
+
+        .select-dropdown-button:hover {
+            background-color: #f9fafb;
+        }
+
+        .select-dropdown-button:focus {
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5), 0 0 #0000;
+            border-color: #6366f1;
+        }
+
+        .select-dropdown-button .selected-value {
+            flex-grow: 1;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .select-dropdown-button svg {
+            margin-left: 0.5rem;
+            height: 1.25rem;
+            width: 1.25rem;
+        }
+
+        .select-dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 0.5rem;
+            width: 14rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            background-color: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            outline: none;
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0.9);
+            transform-origin: top left;
+            visibility: hidden;
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0s linear 0.2s;
+        }
+
+        .select-dropdown-content.show {
+            visibility: visible;
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0s linear;
+        }
+
+        .select-dropdown-content .select-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: #374151;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+        }
+
+        .select-dropdown-content .select-option:hover {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .multi-select-button {
+            display: flex;
+            /* flex-wrap: wrap; */
+            justify-content: space-between;
+            align-items: center;
+            width: 14rem;
+            border-radius: 0.375rem;
+            padding: 0.5rem 1rem;
+            background-color: transparent;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+            outline: none;
+            min-height: 2.5rem;
+        }
+
+        .multi-select-button:hover {
+            background-color: #2c2c2c;
+        }
+
+        .multi-select-button:focus {
+            box-shadow: 0 0 0 3px #9f946a66, 0 0 #0000;
+            border-color: #9f946a;
+        }
+
+        .multi-select-button .selected-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .multi-select-button .selected-tag {
+            background-color: #9333ea;
+            color: #ffffff;
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+
+        .multi-select-button .placeholder {
+            color: #6b7280;
+        }
+
+        .multi-select-button svg {
+            margin-left: 0.5rem;
+            height: 1.25rem;
+            width: 1.25rem;
+        }
+
+        .multi-select-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: #374151;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+        }
+
+        .multi-select-option:hover {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .multi-select-option .checkbox-icon {
+            width: 1rem;
+            height: 1rem;
+            border: 1px solid #9ca3af;
+            border-radius: 0.125rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+        }
+
+        .multi-select-option.selected .checkbox-icon {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+        }
+
+        .multi-select-option.selected .checkbox-icon svg {
+            fill: none;
+            stroke: #fff;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    </style>
+    <div class="formContainer">
+        <h2>Add New Product</h2>
+        <!-- Product Form -->
+        <form id="product-form" action="/add_product" method="post">
+            <div class="form-group">
+                <label for="category" class="form-label">Product Category</label>
+                <select id="category" class="form-select" required name="category">
+                    <option value="">Select a category</option>
+                    <option value="Shoes">Shoes</option>
+                    <option value="Clothing">Clothing</option>
+                    <option value="Accessories">Accessories</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="subcategory" class="form-label">Sub Category</label>
+                <input type="text" id="subcategory" class="form-input" name="subCategory" placeholder="e.g., Sneakers, Jackets, Bags"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="title" class="form-label">Product Name / Title</label>
+                <input type="text" id="title" class="form-input" name="title" placeholder="e.g., Street Runner Pro" required>
+            </div>
+            <div class="form-group">
+                <label for="price" class="form-label">Product Price ($)</label>
+                <input type="number" id="price" name="price" class="form-input" placeholder="e.g., 129.99" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="stock" class="form-label">Available Stock</label>
+                <input type="number" id="stock" class="form-input" name='available_stocks' placeholder="e.g.,100" required>
+            </div>
+
+
+            <div class="form-group">
+                <label for="image" class="form-label">Product Image URL</label>
+                <input type="url" id="image" name="img_url" class="form-input" placeholder="e.g., https://example.com/image.jpg"
+                    required>
+            </div>
+
+            
+            <div class="dropdown-container">
+                <label for="hiddenMultiSelectValue" class="dropdown-label">Select</label>
+                <button id="multiSelectDropdownButton" type="button" class="multi-select-button">
+                    <span id="selectedMultiValues" class="selected-tags">
+                        <span class="placeholder">Choose</span>
+                    </span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+
+                <div id="multiSelectDropdownContent" class="dropdown-content">
+                    <div style="padding-top: 0.25rem; padding-bottom: 0.25rem;" role="menu" aria-orientation="vertical"
+                        aria-labelledby="multiSelectDropdownButton">
+                        <div class="multi-select-option" data-value="Small" role="option">
+                            <span>Small</span>
+                            <span class="checkbox-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"
+                                    style="display: none;">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="multi-select-option" data-value="Medium" role="option">
+                            <span>Medium</span>
+                            <span class="checkbox-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"
+                                    style="display: none;">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="multi-select-option" data-value="Xl" role="option">
+                            <span>Xl</span>
+                            <span class="checkbox-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"
+                                    style="display: none;">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="multi-select-option" data-value="2Xl" role="option">
+                            <span>2Xl</span>
+                            <span class="checkbox-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"
+                                    style="display: none;">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="hiddenMultiSelectValue" name="available_sizes" value="">
+            </div>
+            <p class="error" style="text-align: center;color:
+            red; font-size:15px"></p>
+            <button type="submit" class="form-button">Add Product</button>
+        </form>
+
+        <!-- Status Message Box -->
+        <div id="status-message" class="message-box"></div>
+    </div>
+
+    <script>
+
+        let productForm=document.querySelector('#product-form')
+        let error=document.querySelector('.error')
+        productForm.addEventListener('submit',(e)=>{
+            e.preventDefault()
+            console.log(selectedMultiValues)
+            if(selectedMultiValues.length>0){
+                productForm.submit()
+            }else{
+                error.innerHTML='Each Product Must have One Size'
+                setTimeout(()=>{
+                    error.innerHTML=''
+                },3000)
+            }
+        })
+        function toggleDropdown(button, content) {
+            content.classList.toggle("show");
+        }
+
+        const multiSelectDropdownButton = document.getElementById(
+            "multiSelectDropdownButton"
+        );
+        const multiSelectDropdownContent = document.getElementById(
+            "multiSelectDropdownContent"
+        );
+        const selectedMultiValuesSpan = document.getElementById("selectedMultiValues");
+        const hiddenMultiSelectValueInput = document.getElementById(
+            "hiddenMultiSelectValue"
+        );
+        const multiSelectOptions = multiSelectDropdownContent.querySelectorAll(
+            ".multi-select-option"
+        );
+
+        let selectedMultiValues = [];
+
+        function updateMultiSelectDisplay() {
+            selectedMultiValuesSpan.innerHTML = "";
+            if (selectedMultiValues.length === 0) {
+                const placeholder = document.createElement("span");
+                placeholder.classList.add("placeholder");
+                placeholder.textContent = "Choose";
+                selectedMultiValuesSpan.appendChild(placeholder);
+            } else {
+                selectedMultiValues.forEach((value) => {
+                    const optionElement = Array.from(multiSelectOptions).find(
+                        (opt) => opt.getAttribute("data-value") === value
+                    );
+                    if (optionElement) {
+                        const tag = document.createElement("span");
+                        tag.classList.add("selected-tag");
+                        tag.textContent = optionElement.textContent.trim();
+                        selectedMultiValuesSpan.appendChild(tag);
+                    }
+                });
+            }
+            console.log(selectedMultiValues)
+            hiddenMultiSelectValueInput.value = selectedMultiValues.join(",");
+        }
+
+        multiSelectDropdownButton.addEventListener("click", () =>
+            toggleDropdown(multiSelectDropdownButton, multiSelectDropdownContent)
+        );
+
+        multiSelectOptions.forEach((option) => {
+            option.addEventListener("click", function (event) {
+                event.preventDefault();
+                const value = this.getAttribute("data-value");
+                const checkboxIcon = this.querySelector(".checkbox-icon svg");
+
+                if (this.classList.contains("selected")) {
+                    this.classList.remove("selected");
+                    checkboxIcon.style.display = "none";
+                    selectedMultiValues = selectedMultiValues.filter((v) => v !== value);
+                } else {
+                    this.classList.add("selected");
+                    checkboxIcon.style.display = "block";
+                    selectedMultiValues.push(value);
+                }
+                updateMultiSelectDisplay();
+            });
+        });
+
+        updateMultiSelectDisplay();
+
+        window.addEventListener("click", function (event) {
+            if (
+                !dropdownButton.contains(event.target) &&
+                dropdownContent.classList.contains("show")
+            ) {
+                dropdownContent.classList.remove("show");
+            }
+            if (
+                !selectDropdownButton.contains(event.target) &&
+                selectDropdownContent.classList.contains("show")
+            ) {
+                selectDropdownContent.classList.remove("show");
+            }
+            if (
+                !multiSelectDropdownButton.contains(event.target) &&
+                multiSelectDropdownContent.classList.contains("show")
+            ) {
+                multiSelectDropdownContent.classList.remove("show");
+            }
+        });
+
+        window.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                if (dropdownContent.classList.contains("show")) {
+                    dropdownContent.classList.remove("show");
+                }
+                if (selectDropdownContent.classList.contains("show")) {
+                    selectDropdownContent.classList.remove("show");
+                }
+                if (multiSelectDropdownContent.classList.contains("show")) {
+                    multiSelectDropdownContent.classList.remove("show");
+                }
+            }
+        });
+
+    </script>

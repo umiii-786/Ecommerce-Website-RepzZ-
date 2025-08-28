@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - G.R Repz</title>
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/CSS/login.css">
+    <Style>
+        .body{
+            min-height: 100vh;
+        }
+        .password_divs{
+            display: flex;
+            justify-content: space-between;
+        }
+        @media screen and (max-width:550px){
+            .password_divs{
+                flex-direction: column;
+            }
+            .container{
+                width: 90%;
+                max-width: unset;
+            }
+        }
+    </Style>
+</head>
+
+
+<body>
+    <div class="container">
+        <%- include('../includes/flashMessage.ejs') %>
+            <h2 class="formHeading">Let's Create Your Account</h2>
+            <!-- Login Form -->
+            <form id="login-form" method="post" action="/user/register">
+
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" name='username' class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name='email' class="form-input" required>
+                </div>
+                <div class="password_divs">
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" id="password" name='password' class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassord" class="form-label">ConfirmPassord</label>
+                            <input type="password" id="confirmPassord" class="form-input" required>
+                        </div>
+                </div>
+                <div class='validatorDiv'>
+                    <span class='error_shown'></span>
+                    <div class='decision_div'>
+                        Already Have a Account?
+                        <a class="decision_button" href="/user/login">Login</a>
+                    </div>
+
+                </div>
+                <button type="button" class="form-button" onclick=validatePassword()>Regsiter</button>
+
+
+            </form>
+
+    </div>
+    <script src="/js/register.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - G.R Repz</title>
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        :root {
+            --dark-background: radial-gradient(ellipse at bottom, #2b0c3f 0%, #0c0816 100%);
+            --glowing-purple: #a855f7;
+            --glowing-shadow: 0 0 20px rgba(139, 92, 246, 0.7);
+            --card-background: rgba(0, 0, 0, 0.4);
+            --card-border: rgba(139, 92, 246, 0.5);
+            --main-text-color: #fff;
+            --secondary-text-color: #d1d5db;
+            --button-color: #9333ea;
+            --accent-yellow: yellow;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --chat-bubble-user: #8b5cf6;
+            --chat-bubble-admin: #3b3b44;
+            --cancel-button-color: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-background);
+            height: 100vh;
+            color: var(--main-text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            box-sizing: border-box;
+            margin: 0px;
+        }
+
+        /* Main Container */
+        .container {
+            width: 90%;
+            border-radius: 1rem;
+            display: flex;
+            gap: 3rem;
+        }
+
+        .container>div {
+            width: 30%;
+            height: 470px;
+        }
+
+
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--glowing-purple);
+            text-shadow: 0px 0x 10px white;
+        }
+
+        /* Order History Section */
+        .orders-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--glowing-purple);
+            border-bottom: 2px solid var(--glowing-purple);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .order-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            overflow-y: auto;
+        }
+
+        .order-item {
+            background-color: rgba(15, 11, 26, 0.6);
+            border: 1px solid var(--card-border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .order-item:hover {
+            background-color: rgba(15, 11, 26, 0.8);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .order-info span {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .order-info small {
+            color: var(--secondary-text-color);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .status-shipped {
+            background-color: var(--accent-green);
+            color: black;
+        }
+
+        .status-pending {
+            background-color: var(--accent-yellow);
+            color: black;
+        }
+
+        .status-cancelled {
+            background-color: var(--accent-red);
+            color: white;
+        }
+
+        .order-details-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            padding: 0;
+        }
+
+        .order-details-container.show {
+            max-height: 500px;
+            /* A large enough value to accommodate content */
+            padding-top: 1rem;
+        }
+
+        .product-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            margin-top: 1rem;
+        }
+
+        .product-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-item span {
+            font-size: 0.9rem;
+        }
+
+        .cancel-button {
+            padding: 0.5rem 1rem;
+            background-color: var(--cancel-button-color);
+            color: white;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .cancel-button:hover {
+            background-color: #dc2626;
+        }
+
+
+        /* Chat Interface Section */
+        .chat-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chat-window {
+            height: 400px;
+            background-color: rgba(15, 11, 26, 0.6);
+            border: 1px solid var(--card-border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        .chat-window::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-window::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .chat-window::-webkit-scrollbar-thumb {
+            background: var(--glowing-purple);
+            border-radius: 10px;
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            word-wrap: break-word;
+        }
+
+        .user-bubble {
+            background-color: var(--chat-bubble-user);
+            align-self: flex-end;
+            text-align: right;
+        }
+
+        .admin-bubble {
+            background-color: var(--chat-bubble-admin);
+            align-self: flex-start;
+            text-align: left;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 0.75rem;
+            background-color: var(--card-background);
+            border: 1px solid var(--card-border);
+            border-radius: 9999px;
+            color: var(--main-text-color);
+            resize: none;
+            overflow-y: hidden;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--glowing-purple);
+        }
+
+        .send-button {
+            padding: 0.75rem 2rem;
+            background-color: var(--button-color);
+            color: white;
+            font-weight: 600;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .send-button:hover {
+            background-color: var(--glowing-purple);
+        }
+
+        /* Loading indicator */
+        .loading {
+            align-self: flex-start;
+            color: var(--secondary-text-color);
+            font-style: italic;
+        }
+
+        /* Modal for cancellation */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(15, 11, 26, 0.9);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid var(--card-border);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--glowing-shadow);
+            text-align: left;
+            position: relative;
+        }
+
+        .close-modal {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--glowing-purple);
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--card-background);
+            border: 1px solid var(--card-border);
+            border-radius: 0.5rem;
+            color: var(--main-text-color);
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        .modal-button-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .confirm-cancel-button {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--cancel-button-color);
+            color: white;
+            font-weight: 600;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .confirm-cancel-button:hover {
+            background-color: #dc2626;
+        }
+
+        .modal-message {
+            margin-top: 1rem;
+            color: var(--accent-green);
+        }
+
+        .profileIntro {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .info {
+            height: 100%;
+            display: contents;
+        }
+
+        .info>h3 {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .info>h3>span {
+            color: var(--glowing-purple);
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../includes/navbar.ejs') %>
+        <%- include('../includes/cart.ejs') %>
+            <div class="container">
+                <div class="profileIntro">
+                    <h1 class="section-title">My Profile</h1>
+                    <div class="info">
+                        <h3><span>Name :</span>
+                            <%= user.username %>
+                        </h3>
+                        <h3><span>Email :</span>
+                            <%= user.email %>
+                        </h3>
+                        <h3><span>Total Orders :</span> 10</h3>
+                        <h3><span>Shipped Orders :</span> 10</h3>
+                        <h3><span>Cancelled Orders :</span> 10</h3>
+                    </div>
+                </div>
+
+                <!-- Orders Section -->
+                <div class="orders-section">
+                    <h2 class="section-title">My Orders</h2>
+                    <ul class="order-list" id="order-list">
+                        <!-- Orders will be dynamically populated here -->
+                    </ul>
+                </div>
+
+                <!-- Chat Section -->
+                <div class="chat-section">
+                    <h2 class="section-title">Chat with Admin</h2>
+                    <div class="chat-window" id="chat-window">
+                        <!-- Chat messages will appear here -->
+                        <div class="chat-bubble admin-bubble">Hello! How can I help you today regarding your orders or
+                            account?
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" id="chat-input" class="chat-input" placeholder="Type your message here...">
+                        <button id="send-button" class="send-button" onclick="SendUserMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cancellation Modal -->
+            <div id="cancel-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h3 class="modal-title">Request Order Cancellation</h3>
+                    <p>Please provide a reason for the cancellation of order <strong id="modal-order-id"></strong>.</p>
+                    <textarea id="cancellation-reason" class="modal-input" rows="4" placeholder="Enter reason here..."
+                        required></textarea>
+                    <div class="modal-button-container">
+                        <button id="cancel-confirm-button" class="confirm-cancel-button">Confirm Cancellation</button>
+                    </div>
+                    <p id="cancellation-message" class="modal-message" style="display: none;"></p>
+                </div>
+            </div>
+
+            <script src="/js/cart.js"></script>
+            <script src="/socket.io/socket.io.js"></script>
+            <script>
+                const userData = <%- JSON.stringify(user) %>;
+               
+                const socket = io();
+                socket.emit('register_user', userData)
+
+                function SendUserMessage(){
+                    let chatInput=document.querySelector('.chat-input')
+                    if(chatInput.value!=""){
+                        socket.emit('message_for_admin',{ "to":'Admin','message': chatInput.value })
+                    }
+                }
+            </script>
+
+            <!-- <script>
+            // Use a self-executing function to avoid global scope pollution
+            (function () {
+                // --- Gemini API Configuration (for demonstration) ---
+                const API_KEY = ""; // Canvas will provide this at runtime
+                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+
+                // --- Dummy Data ---
+                const orders = [
+                    {
+                        id: 'ORD83728',
+                        date: '2025-08-25',
+                        total: '125.00',
+                        status: 'Shipped',
+                        products: [
+                            { name: 'Cosmic Sneakers', quantity: 1, price: 90.00 },
+                            { name: 'Moon T-shirt', quantity: 2, price: 17.50 }
+                        ]
+                    },
+                    {
+                        id: 'ORD83728',
+                        date: '2025-08-25',
+                        total: '125.00',
+                        status: 'Shipped',
+                        products: [
+                            { name: 'Cosmic Sneakers', quantity: 1, price: 90.00 },
+                            { name: 'Moon T-shirt', quantity: 2, price: 17.50 }
+                        ]
+                    },
+                    {
+                        id: 'ORD83727',
+                        date: '2025-08-22',
+                        total: '75.00',
+                        status: 'Pending',
+                        products: [
+                            { name: 'Nebula Hoodie', quantity: 1, price: 75.00 }
+                        ]
+                    },
+                    {
+                        id: 'ORD83726',
+                        date: '2025-08-20',
+                        total: '60.00',
+                        status: 'Shipped',
+                        products: [
+                            { name: 'Space Key Chain', quantity: 4, price: 15.00 }
+                        ]
+                    },
+                    {
+                        id: 'ORD83725',
+                        date: '2025-08-18',
+                        total: '25.00',
+                        status: 'Cancelled',
+                        products: [
+                            { name: 'Galaxy Gloves', quantity: 1, price: 25.00 }
+                        ]
+                    },
+                ];
+
+                // --- DOM Elements ---
+                const orderListEl = document.getElementById('order-list');
+                const chatWindow = document.getElementById('chat-window');
+                const chatInput = document.getElementById('chat-input');
+                const sendButton = document.getElementById('send-button');
+                const modal = document.getElementById('cancel-modal');
+                const modalOrderIdEl = document.getElementById('modal-order-id');
+                const cancellationReasonEl = document.getElementById('cancellation-reason');
+                const confirmCancelButton = document.getElementById('cancel-confirm-button');
+                const cancellationMessageEl = document.getElementById('cancellation-message');
+
+                let chatHistory = [{ role: "model", parts: [{ text: "Hello! How can I help you today regarding your orders or account?" }] }];
+                let currentOrderIdToCancel = null;
+
+                // --- Order History Functionality ---
+                function renderOrders() {
+                    orderListEl.innerHTML = '';
+                    orders.forEach(order => {
+                        const li = document.createElement('li');
+                        li.classList.add('order-item');
+                        li.dataset.orderId = order.id;
+
+                        const statusClass = order.status === 'Shipped' ? 'status-shipped' :
+                            order.status === 'Pending' ? 'status-pending' :
+                                'status-cancelled';
+
+                        const orderHeaderHTML = `
+                        <div class="order-header">
+                            <div class="order-info">
+                                <span>Order ID: ${order.id}</span>
+                                <small>Date: ${order.date} | Total: $${order.total}</small>
+                            </div>
+                            <span class="status-badge ${statusClass}">${order.status}</span>
+                        </div>
+                    `;
+
+                        const orderDetailsHTML = `
+                        <div class="order-details-container">
+                            <ul class="product-list">
+                                ${order.products.map(p => `
+                                    <li class="product-item">
+                                        <span>${p.name} (x${p.quantity})</span>
+                                        <span>$${p.price.toFixed(2)} each</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                            <button class="cancel-button" data-order-id="${order.id}">Cancel Order</button>
+                        </div>
+                    `;
+
+                        li.innerHTML = orderHeaderHTML + orderDetailsHTML;
+                        orderListEl.appendChild(li);
+                    });
+
+                    // Attach event listeners for each order item
+                    document.querySelectorAll('.order-item').forEach(item => {
+                        item.addEventListener('click', (e) => {
+                            // Toggle product details visibility on click
+                            const detailsContainer = item.querySelector('.order-details-container');
+                            if (e.target.classList.contains('cancel-button')) {
+                                e.stopPropagation();
+                                return;
+                            }
+                            detailsContainer.classList.toggle('show');
+                        });
+                    });
+
+                    // Attach event listeners for each cancel button
+                    document.querySelectorAll('.cancel-button').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            currentOrderIdToCancel = e.target.dataset.orderId;
+                            modalOrderIdEl.textContent = currentOrderIdToCancel;
+                            cancellationReasonEl.value = '';
+                            cancellationMessageEl.style.display = 'none';
+                            modal.style.display = 'flex';
+                        });
+                    });
+                }
+
+                // --- Modal and Cancellation Functionality ---
+                document.querySelector('.close-modal').addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+                window.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+
+                confirmCancelButton.addEventListener('click', async () => {
+                    const reason = cancellationReasonEl.value.trim();
+                    if (reason === '') {
+                        cancellationMessageEl.textContent = 'Please provide a reason.';
+                        cancellationMessageEl.style.display = 'block';
+                        cancellationMessageEl.style.color = " var(--accent-red)";
+                        return;
+                    }
+
+                    cancellationMessageEl.textContent = 'Submitting request...';
+                    cancellationMessageEl.style.display = 'block';
+                    cancellationMessageEl.style.color = "var(--glowing-purple)";
+
+                    // Simulate sending a cancellation request to the admin assistant
+                    const userQuery = `I want to cancel order ${currentOrderIdToCancel}. The reason is: ${reason}. Please process this for me.`;
+                    const systemPrompt = "You are a friendly and helpful e-commerce customer support agent named Readdy. Your primary goal is to process user requests, including order cancellations. When a user requests an order cancellation, you should acknowledge the request and inform them that you are processing it. Do not actually cancel the order in the dummy data. Keep responses concise and professional.";
+
+                    try {
+                        const response = await fetchWithBackoff(API_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{ role: "user", parts: [{ text: userQuery }] }],
+                                systemInstruction: { parts: [{ text: systemPrompt }] },
+                            })
+                        });
+
+                        const result = await response.json();
+                        const adminResponse = result?.candidates?.[0]?.content?.parts?.[0]?.text || "I apologize, I'm currently unable to assist with your cancellation request. Please try again later.";
+
+                        cancellationMessageEl.textContent = adminResponse;
+                        cancellationMessageEl.style.color = "var(--accent-green)";
+                    } catch (error) {
+                        console.error('Error with cancellation request:', error);
+                        cancellationMessageEl.textContent = 'An error occurred. Please try again.';
+                        cancellationMessageEl.style.color = "var(--accent-red)";
+                    }
+                });
+
+                // --- Chat Functionality ---
+                function addMessage(text, isUser) {
+                    const bubble = document.createElement('div');
+                    bubble.classList.add('chat-bubble');
+                    bubble.classList.add(isUser ? 'user-bubble' : 'admin-bubble');
+                    bubble.textContent = text;
+                    chatWindow.appendChild(bubble);
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                }
+
+                async function sendMessage() {
+                    const userMessage = chatInput.value.trim();
+                    if (userMessage === '') return;
+
+                    addMessage(userMessage, true);
+                    chatInput.value = '';
+
+                    chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
+
+                    const loadingIndicator = document.createElement('div');
+                    loadingIndicator.classList.add('loading');
+                    loadingIndicator.textContent = 'Admin is typing...';
+                    chatWindow.appendChild(loadingIndicator);
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+                    try {
+                        const response = await fetchWithBackoff(API_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: chatHistory,
+                                systemInstruction: {
+                                    parts: [{ text: "You are a friendly and helpful e-commerce customer support agent. You answer user questions about their orders, payments, and account. You can provide general advice and check on order statuses based on the provided dummy data. Keep your responses concise and to the point. If a user asks a question about something you cannot help with, politely redirect them to other support channels. Be polite and professional. Your name is Readdy." }]
+                                },
+                            })
+                        });
+
+                        const result = await response.json();
+                        const adminResponse = result?.candidates?.[0]?.content?.parts?.[0]?.text || "I apologize, I'm currently unable to assist. Please try again later or contact our support team.";
+
+                        chatWindow.removeChild(loadingIndicator);
+
+                        addMessage(adminResponse, false);
+                        chatHistory.push({ role: "model", parts: [{ text: adminResponse }] });
+
+                    } catch (error) {
+                        console.error('Error fetching from Gemini API:', error);
+                        chatWindow.removeChild(loadingIndicator);
+                        addMessage("I'm sorry, an error occurred. Please try again.", false);
+                    }
+                }
+
+                async function fetchWithBackoff(url, options, retries = 3, delay = 1000) {
+                    for (let i = 0; i < retries; i++) {
+                        try {
+                            const response = await fetch(url, options);
+                            if (!response.ok) {
+                                if (response.status === 429 && i < retries - 1) {
+                                    await new Promise(res => setTimeout(res, delay * Math.pow(2, i)));
+                                    continue;
+                                }
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response;
+                        } catch (error) {
+                            if (i < retries - 1) {
+                                await new Promise(res => setTimeout(res, delay * Math.pow(2, i)));
+                            } else {
+                                throw error;
+                            }
+                        }
+                    }
+                }
+
+                // --- Event Listeners ---
+                sendButton.addEventListener('click', sendMessage);
+                chatInput.addEventListener('keypress', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        sendMessage();
+                    }
+                });
+
+                // --- Initial Page Load ---
+                window.onload = () => {
+                    renderOrders();
+                };
+            })();
+        </script> -->
+</body>
+
+</html>

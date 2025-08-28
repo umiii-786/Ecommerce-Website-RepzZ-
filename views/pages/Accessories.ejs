@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="index.css">
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Shoes</title>
+</head>
+
+<body class="p-4 sm:p-8">
+    <div id="products-page" class="w-full flex flex-col items-center">
+        <!-- Header -->
+        <header class="w-full max-w-7xl flex justify-between items-center py-4 px-4 sm:px-8">
+            <a href="/">
+                <h1 class="font-extrabold text-2xl tracking-wide cursor-pointer">G.<span
+                        class="text-purple-400">R</span> RepzZ</h1>
+            </a>
+            <nav class="hidden md:flex space-x-8 text-lg font-medium">
+                <a href="/Shoes.html" class="hover:text-purple-400 transition-colors">Shoes</a>
+                <a href="/Clothing.html" class="hover:text-purple-400 transition-colors">Clothing</a>
+                <a href="/Accessories.html" class="hover:text-purple-400 transition-colors">Accessories</a>
+            </nav>
+
+            <!-- Cart Icon -->
+            <div class="flex items-center space-x-4">
+                <a href="#" onclick="toggleCartModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-shopping-cart icon-glow">
+                        <circle cx="8" cy="21" r="1" />
+                        <circle cx="19" cy="21" r="1" />
+                        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                    </svg>
+                </a>
+                <button class="md:hidden">
+                    <!-- Hamburger icon for mobile menu -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-menu">
+                        <line x1="4" x2="20" y1="12" y2="12" />
+                        <line x1="4" x2="20" y1="6" y2="6" />
+                        <line x1="4" x2="20" y1="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <main class="flex flex-col items-center text-center mt-12 sm:mt-20 w-full px-4">
+            <h2 id="products-title" class="font-extrabold text-5xl sm:text-6xl tracking-wide mb-2"></h2>
+            <p id="products-subtitle" class="text-gray-400 mb-8"></p>
+            <div class="categories_option w-[80%] flex flex-row " style="flex-wrap: wrap;">
+
+            </div>
+            <!-- Product Grid -->
+            <section id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl">
+                <!-- Product cards will be inserted here by JavaScript -->
+            </section>
+        </main>
+        <!-- Footer Contact Section -->
+        <!-- <footer class="w-full max-w-5xl text-center mt-20 px-4 sm:px-0 fixed button-0">
+            <div class="mt-8 text-sm text-gray-400">
+                Designed by <a href="#" class="text-purple-400 hover:underline">Readdy</a>
+            </div>
+        </footer> -->
+    </div> <!-- End of products-page container -->
+
+    <script src="/index.js"></script>
+    <script>
+        let sub_categories = categories['Accessories']
+        titleEl.textContent = categoryTitles['Accessories'];
+        subtitleEl.textContent = categorySubtitles['Accessories'];
+        let categories_options_div = document.querySelector('.categories_option')
+        sub_categories.forEach(category => {
+            categories_options_div.innerHTML += `
+               <button
+                    class="bg-purple-600 hover:bg-purple-700 mt-[10px] mx-4 text-white font-semibold py-2 px-6 rounded-full button-glow transition-all">
+                    ${category.name}
+                </button>`
+        });
+    </script>
+</body>
+
+</html>
