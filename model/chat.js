@@ -26,6 +26,12 @@ const chat_schema=new mongoose.Schema({
         type:mongoose.Schema.ObjectId,
         ref:'User'
     },
+    last_message:{
+        type:String,
+    },
+    updated_at:{
+        type:Date
+    },
     messages:{
         type:[message_schema]
     }

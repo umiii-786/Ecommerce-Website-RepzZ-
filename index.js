@@ -43,10 +43,11 @@ let users = {}
 let adminSocketId = null
 
 io.on('connection', (socket) => {
-    socket.on('register_user', (user) => {
+    socket.on('register_user', (userID) => {
         console.log('user registered')
-        users[socket.id] = user
+        users[socket.id] = userID
         console.log(users)
+        // console.log(userID)
     })
 
     socket.on("register_admin", (adminId) => {
@@ -56,20 +57,28 @@ io.on('connection', (socket) => {
 
     socket.on('message_for_admin', async ({ to, message }) => {
         if (to == 'Admin') {
-            const userChat = await Chat.findOne({ 'userid': users[socket.id]._id })
-            message = {
+            // console.log(users[socket.id]._id)
+            let userChat = await Chat.findOne({ 'userid': users[socket.id]._id })
+            .populate('userid')
+            // console.log(userChat)
+            message_object = {
                 sender: 'user',
                 message: message,
                 status: 'unread'
             }
+            // console.log(message_object)
+            console.log(userChat,' userchat')
             if (!userChat) {
-                userChat = new Chat({ userid: users[socket.id]._id })
+                userChat = new Chat({ userid: users[socket.id]})
             }
             if (adminSocketId) {
-                message['status'] = 'read'
-                io.to(adminSocketId).emit("user_message", { from: socket.id, message,user:users[socket.id] });
+                message_object['status'] = 'read'
             }
-            userChat.messages.push(message)
+            userChat.last_message = message
+            userChat.updated_at = Date.now()
+            userChat.messages.push(message_object)
+
+            io.to(adminSocketId).emit("user_message", { from: socket.id, userChat: userChat });
             await userChat.save()
         }
     })
@@ -79,6 +88,7 @@ io.on('connection', (socket) => {
             io.to(clientSocketId).emit("private_message", { from: "admin", message });
         }
     });
+
 });
 
 app.set('view engine', 'ejs');
@@ -376,8 +386,59 @@ app.get('/order/manage', (req, res) => {
 app.get('/sales', (req, res) => {
     res.render('BackendPages/salespage.ejs')
 })
-app.get('/messages', (req, res) => {
-    res.render('BackendPages/customer_messages.ejs')
+// async function getChat() {
+//     const chats = await Chat.aggregate([
+//         {
+//             $addFields: {
+//                 unreadCount: {
+//                     $size: {
+//                         $filter: {
+//                             input: "$messages",
+//                             as: "msg",
+//                             cond: { $eq: ["$$msg.status", "unread"] }
+//                         }
+//                     }
+//                 }
+//             }
+//         },
+//         {
+//             $sort: {
+//                 unreadCount: -1,   // First priority: unread messages
+//                 updated_at: -1     // Second: latest updated
+//             }
+//         },
+//         {
+//             $lookup: {
+//                 from: "users",                // collection name in MongoDB
+//                 localField: "userid",
+//                 foreignField: "_id",
+//                 as: "userid"
+//             }
+//         },
+//         {
+//             $unwind: "$userInfo"
+//         },
+//         {
+//             $project: {
+//                 last_message: 1,
+//                 updated_at: 1,
+//                 unreadCount: 1,
+//                 messages: 1,   // ✅ include full conversation here
+//                 "userInfo._id": 1,
+//                 "userInfo.name": 1,
+//                 "userInfo.email": 1,
+//                 "userInfo.avatar": 1
+//             }
+//         }
+//     ]);
+
+//     return chats
+// }
+app.get('/messages', async (req, res) => {
+    const chats = await Chat.find({}).populate('userid')
+
+    console.log(chats)
+    res.render('BackendPages/customer_messages.ejs', { chats })
 })
 
 app.get('/history', (req, res) => {

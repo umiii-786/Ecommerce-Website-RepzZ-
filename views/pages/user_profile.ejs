@@ -457,16 +457,34 @@
             <script src="/socket.io/socket.io.js"></script>
             <script>
                 const userData = <%- JSON.stringify(user) %>;
-               
-                const socket = io();
-                socket.emit('register_user', userData)
+                const chatWindow = document.getElementById('chat-window');
 
-                function SendUserMessage(){
-                    let chatInput=document.querySelector('.chat-input')
-                    if(chatInput.value!=""){
-                        socket.emit('message_for_admin',{ "to":'Admin','message': chatInput.value })
+                const socket = io();
+                socket.emit('register_user', userData._id)
+
+                function SendUserMessage() {
+                    let chatInput = document.querySelector('.chat-input')
+                    const userMessage = chatInput.value.trim();
+
+                    if (chatInput.value != "") {
+                        addMessage(userMessage, true);
+                        chatInput.value = '';
+                        console.log('emiting ',userMessage)
+                        socket.emit('message_for_admin', { "to": 'Admin', 'message': userMessage })
                     }
                 }
+
+                function addMessage(text, isUser) {
+                    const bubble = document.createElement('div');
+                    bubble.classList.add('chat-bubble');
+                    bubble.classList.add(isUser ? 'user-bubble' : 'admin-bubble');
+                    bubble.textContent = text;
+                    chatWindow.appendChild(bubble);
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                }
+                socket.on('reply_from_Admin',(from,message)=>{
+
+                })
             </script>
 
             <!-- <script>
