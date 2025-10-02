@@ -31,6 +31,7 @@
             border-radius: 0.75rem;
             background-color: rgba(15, 11, 26, 0.6);
             overflow: hidden;
+            height: 90vh;
         }
 
         .chat-layout {

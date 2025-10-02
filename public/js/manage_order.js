@@ -1,13 +1,5 @@
 
 // Sample order data for demonstration
-const allOrders = [
-    { id: "ORD001", customer: "Jane Doe", date: "2025-08-15", status: "pending", total: 250.00 },
-    { id: "ORD002", customer: "John Smith", date: "2025-08-14", status: "shipped", total: 120.00 },
-    { id: "ORD003", customer: "Alice Johnson", date: "2025-08-13", status: "delivered", total: 85.00 },
-    { id: "ORD004", customer: "Bob Williams", date: "2025-08-12", status: "cancelled", total: 45.00 },
-    { id: "ORD005", customer: "Charlie Brown", date: "2025-08-11", status: "pending", total: 300.00 }
-];
-
 const orderIdInput = document.getElementById('order-id');
 const statusSelect = document.getElementById('status');
 const orderTableBody = document.getElementById('order-table-body');
@@ -25,22 +17,28 @@ function renderOrders(orders) {
         row.classList.add('order-table-row');
         const statusClass = `status-${order.status.toLowerCase()}`;
         row.innerHTML = `
-                    <td>${order.id}</td>
-                    <td>${order.customer}</td>
-                    <td>${order.date}</td>
+                   <td>${order._id.substring(0, 10)}</td>
+                    <td>${order.created_by.username}</td>
+                    <td>${order.placed_at.split('T')[0]}</td>
                     <td><span class="status-badge ${statusClass}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
-                    <td>$${order.total.toFixed(2)}</td>
+                    <td>$${order.total}</td>
                     <td>
                         <div class="action-buttons">
-                            <button class="action-button view-button" onclick="viewOrder('${order.id}')">View</button>
-                            <button class="action-button status-button" onclick="changeStatus('${order.id}')">Change Status</button>
-                            <button class="action-button cancel-button" onclick="cancelOrder('${order.id}')">Cancel</button>
+                           <button class="action-button status-button" onclick="changeStatus('${order._id}')">Change Status</button>
                         </div>
+                         <form action="/order/${order._id}?_method=PUT" method="POST" class='options_status' id='${order._id}'>
+                        <button type="submit" name="status" value="Pending" class="status_change_button">Pending</button>
+                        <button type="submit" name="status" value="Shipped" class="status_change_button">Shipped</button>
+                        <button type="submit" name="status" value="Delivered" class="status_change_button">Delivered</button>
+                    </form>
                     </td>
+                 
                 `;
         orderTableBody.appendChild(row);
     });
     showStatusMessage('');
+    //    <a href='/order/${order._id}' class="action-button view-button">View</a>
+    //<button class="action-button cancel-button" onclick="cancelOrder('${order._id}')">Cancel</button>
 }
 
 // Placeholder functions for admin actions
@@ -50,8 +48,9 @@ function viewOrder(orderId) {
 }
 
 function changeStatus(orderId) {
-    console.log('Changing status for order:', orderId);
-    alert(`Change Status button clicked for Order ID: ${orderId}`);
+    const form=document.getElementById(orderId)
+    form.style.display='flex'
+   
 }
 
 function cancelOrder(orderId) {
@@ -65,7 +64,7 @@ function filterOrders() {
     const selectedStatus = statusSelect.value.toLowerCase();
 
     const filtered = allOrders.filter(order => {
-        const matchesId = order.id.toLowerCase().includes(searchTerm);
+        const matchesId = order._id.toLowerCase().includes(searchTerm);
         const matchesStatus = !selectedStatus || order.status.toLowerCase() === selectedStatus;
         return matchesId && matchesStatus;
     });

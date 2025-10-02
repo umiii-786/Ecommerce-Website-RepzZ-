@@ -40,7 +40,7 @@
             min-height: 100vh;
         }
 
-      
+
         /* Main Content */
         .main-content {
             flex-grow: 1;
@@ -49,7 +49,28 @@
             margin: 0px 20px;
         }
 
-     
+        .burgur {
+            display: none;
+            width: 30px;
+            height: 40px;
+            cursor: pointer;
+        }
+    </style>
+    <style>
+        @media screen and (max-width:1030px) {
+
+            .sidebar {
+                position: absolute;
+                height: 100%;
+                z-index: 10;
+                left: -500px;
+                transition: all linear 0.5s;
+            }
+            .burgur{
+                display: inline-block;
+            }
+
+        }
     </style>
 </head>
 
@@ -57,16 +78,32 @@
 
     <div class="dashboard-container">
         <!-- Sidebar -->
-         <%- include('includes/sidebar.ejs') %>
-         
-         <!-- Main Content -->
-         <main class="main-content">
-            <%- include('includes/backend_header.ejs') %>
-            <%- include('includes/flashMessage.ejs') %>
-                        <%- body -%> 
-        </main>
+        <%- include('includes/sidebar.ejs') %>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <%- include('includes/backend_header.ejs') %>
+                    <%- include('includes/flashMessage.ejs') %>
+                        <%- body -%>
+            </main>
     </div>
 
 </body>
+<script>
+    let burgur=document.querySelector('.burgur')
+    burgur.addEventListener('click',(event)=>{
+        let sidebar=document.querySelector('.sidebar')
+
+       const element_style= window.getComputedStyle(sidebar)
+       console.log(element_style)
+       if (element_style.left=='-500px'){
+        sidebar.style.left='0px'
+    }
+    else{
+           sidebar.style.left='-500px'
+
+       }
+    })
+</script>
 
 </html>

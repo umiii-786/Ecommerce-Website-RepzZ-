@@ -1,11 +1,11 @@
 
 <link rel="stylesheet" href="/CSS/includes/sidebar.css">
 <aside class="sidebar">
-            <h1 class="sidebar-logo">
+            <!-- <h1 class="sidebar-logo">
                 G.<span class="sidebar-logo-color">R</span> Repz
-            </h1>
+            </h1> -->
             <nav class="sidebar-nav">
-                <div class="nav-item active">
+                <div class="nav-item">
                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -27,7 +27,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 10h18M3 14h18M11 20h10M3 20h7"></path>
                     </svg>
-                    <a href="/product">Products</a>
+                    <a href="/product/manage">Products</a>
                 </div>
                 <div class="nav-item">
                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -69,13 +69,24 @@
                 </div>
             </nav>
             <div style="flex-grow: 1;"></div>
-            <div class="nav-item">
-                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
-                    </path>
-                </svg>
-                <span>Signout</span>
-            </div>
+            
         </aside>
+
+        <script>
+            let current_page= window.location.pathname
+
+            console.log(current_page)
+            let aTag=document.querySelector(`a[href='${current_page}']`)
+            let check=aTag?true:false
+            if(check){
+                let current_url=aTag.parentElement
+                current_url.classList.add('active')
+            }
+           /* function Color_target_page(element){
+                let allChilds=document.querySelectorAll('.nav-item')
+                for(let i=0;i<allChilds.length;i++){
+                    allChilds[i].classList.remove('active')
+                }
+                element.classList.add('active')
+            }*/
+        </script>

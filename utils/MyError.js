@@ -10,5 +10,3 @@ module.exports={
     MyError
 }
 
-console.log(new MyError(404,'helloworld').message)
-console.log(new MyError(404,'helloworld').status)

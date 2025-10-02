@@ -36,7 +36,7 @@
         <%- include('../includes/flashMessage.ejs') %>
             <h2 class="formHeading">Let's Create Your Account</h2>
             <!-- Login Form -->
-            <form id="login-form" method="post" action="/user/register">
+            <form id="login-form" method="post" action="/register">
 
                 <div class="form-group">
                     <label for="username" class="form-label">Username</label>
@@ -58,6 +58,8 @@
                             <input type="password" id="confirmPassord" class="form-input" required>
                         </div>
                 </div>
+                <input type="text" name="Role" value="Admin" id="confirmPassord" class="form-input" style="display: none;" required>
+
                 <div class='validatorDiv'>
                     <span class='error_shown'></span>
                     <div class='decision_div'>

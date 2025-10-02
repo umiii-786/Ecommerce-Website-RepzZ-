@@ -9,6 +9,11 @@ const itemSchema = mongoose.Schema({
     price: {
         type: Number,
         required: true
+    },
+    quantity:{
+        type:Number,
+        required:true,
+        min:1
     }
 }, { _id: false });
 
@@ -38,7 +43,6 @@ const order_schema = new mongoose.Schema({
 })
 
 const Order = mongoose.model('order',order_schema)
-
 
 module.exports = {
     Order

@@ -1,43 +1,6 @@
 <link rel="stylesheet" href="/CSS/includes/navbar.css">
 <style>
-    .cart_option_and_login_option {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .logo {
-        width: 100px;
-        height: 50px;
-        object-fit: contain;
-    }
-
-    .profile_logo {
-        width: 30px;
-        height: 40px;
-        object-fit: contain;
-        margin-left: 20px;
-    }
-
-    .profile_options {
-        width: 50px;
-        height: 40px;
-    }
-
-    .cart_button {
-        position: relative;
-    }
-
-    .countCartItem {
-        position: absolute;
-        top: -10px;
-        right: -10px;
-        background: purple;
-        /* width: 9px; */
-        padding: 3px 8px;
-        border-radius: 10px;
-        z-index: 10;
-    }
+    
 </style>
 <header>
     <a href="/">
@@ -48,9 +11,9 @@
                 </h1> -->
     </a>
     <nav class="nav">
-        <a href="/#Collections" class="nav-link-glow">Collections</a>
-        <a href="/#contact-us" class="nav-link-glow">Contact Us</a>
-        <a href="/#testonomials" class="nav-link-glow">Testonomials</a>
+        <a href="#Collections" class="nav-link-glow">Collections</a>
+        <a href="#contact-us" class="nav-link-glow">Contact Us</a>
+        <a href="#testonomials" class="nav-link-glow">Testonomials</a>
     </nav>
 
     <!-- Cart Icon -->
@@ -85,14 +48,14 @@
                 <img src="/images/profileLogoRm.png" alt="profileLogo" class="profile_logo">
             </a>
 
-            <a href="/user/logout" class="login_button button-glow">
+            <a href="/logout" class="login_button button-glow">
                 🔙 Logout
             </a>
 
 
 
             <% } else if (user==undefined) { %>
-                <a href="/user/login" class="login_button button-glow">
+                <a href="/login" class="login_button button-glow">
                     Login
                 </a>
                 <% } %>

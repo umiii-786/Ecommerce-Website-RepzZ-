@@ -1,5 +1,5 @@
 <% layout('backend_boilerplate.ejs') -%>
-    <link rel="stylesheet" href="/CSS/products.css">
+    <link rel="stylesheet" href="/CSS/manage_product.css">
     <!-- Search and Filter Section -->
     <form action="/product" method="GET" class="search-container">
         <div class="search-input-group">
@@ -25,7 +25,7 @@
     </form>
 
     <div class="create-product-section">
-        <a href="/add_product" class="create-product-button">Add Product</a>
+        <a href="/product" class="create-product-button">Add Product</a>
     </div>
 
     <div class="table-container">
@@ -56,9 +56,12 @@
                                 <a href="/product/<%= AllProducts[i]._id %>" class="action-button view-button"
                                     >View</button>
                                 <a class="action-button edit-button"
-                                    href="/product/<%= AllProducts[i]._id %>?_method=PUT"  >Edit</a>
-                                <a class="action-button delete-button"
-                                    href="/product/<%= AllProducts[i]._id %>?_method=delete" >Delete</a>
+                                    href="/product/<%= AllProducts[i]._id %>/edit"  >Edit</a>
+                                <form action="/product/<%= AllProducts[i]._id %>?_method=delete" method="post">
+                                    <button class="action-button delete-button"
+                                    >Delete</a>
+
+                                </form>
                             </div>
                         </td>
                     </tr>

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-
+const {Review}=require('./review')
 const product_schema = new mongoose.Schema({
     category: {
         type: String,
@@ -48,6 +48,12 @@ const product_schema = new mongoose.Schema({
         default:Date.now()
     }
 })
+
+product_schema.pre('findOneAndDelete', async function(next) {
+  const product_id = this.getQuery()._id;
+  await Review.findOneAndDelete({productId:product_id})
+  next();
+});
 
 const Product = mongoose.model('product',product_schema)
 module.exports = {

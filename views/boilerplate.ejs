@@ -62,6 +62,15 @@
         <%- include('includes/footer.ejs') %>
     
     </div>
+    
     <script src="/js/cart.js"></script>
+    <script>
+        let cart=getCart()
+        items= cart!=null? cart.length:0
+        console.log(cart)
+        console.log(items)
+        document.querySelector('.countCartItem').innerHTML=items
+        console.log('setting the cart')
+    </script>
 </body>
 </html>

@@ -8,9 +8,14 @@
             border-radius: 1rem;
             box-shadow: var(--glowing-shadow);
         }
+        
 
         .search-bar {
             flex-grow: 1;
+        }
+        .search-bar>img{
+            width: 70px;
+        
         }
 
         .search-input {

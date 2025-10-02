@@ -4,6 +4,7 @@ const user_schema_validator = Joi.object({
     username: Joi.string().required(),
     email:Joi.string().required(),
     password:Joi.string().required(),
+    Role:Joi.string().valid('User','Admin')
 })
 module.exports={
     user_schema_validator

@@ -1,101 +1,9 @@
 <!-- Hero Section -->
 <% layout('boilerplate.ejs') -%>
 
-    <style>
-        .formSection {
-            display: flex;
-            justify-content: space-between;
-            width: 90%;
-            align-items: center;
-            margin-top: 50px;
-        }
-
-        .left_formSection {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            width: 60%;
-        }
-
-        .contact-title {
-            font-weight: 800;
-            font-size: 3rem;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.5rem;
-            color: #a855f7;
-        }
-
-        .contact-subtitle {
-            color: #9ca3af;
-            margin-bottom: 2rem;
-            font-size: 1rem;
-        }
-
-        .contact-form {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .form-group {
-            position: relative;
-            margin-bottom: 1rem;
-        }
-
-        .form-input,
-        .form-textarea {
-            width: 100%;
-            padding: 1rem;
-            background-color: transparent;
-            border: 1px solid #475569;
-            border-radius: 0.5rem;
-            color: #ffffff;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .form-input:focus,
-        .form-textarea:focus {
-            border-color: #a855f7;
-            box-shadow: 0 0 8px #a855f7, 0 0 12px #a855f7;
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        .submit-button {
-            background-color: #9333ea;
-            color: #ffffff;
-            font-weight: 600;
-            padding: 1rem 2rem;
-            border-radius: 9999px;
-            border: none;
-            cursor: pointer;
-            font-size: 1.125rem;
-            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-
-        .submit-button:hover {
-            background-color: #a855f7;
-            box-shadow: 0 0 5px #a855f7, 0 0 10px #a855f7;
-        }
-
-        .right_formSection {
-            width: 30%;
-        }
-
-        .right_formSection>img {
-            width: 100%;
-            object-fit: contain;
-
-        }
-    </style>
+   
     <link rel="stylesheet" href="/CSS/home.css">
+    <link rel="stylesheet" href="/CSS/home_res.css">
     <main class="main-content">
 
         <div class="main-content-left">
@@ -117,39 +25,149 @@
 
         </div>
         <div class="main-content-right">
-            <img src="/images/shoesrm.png" alt="Ecommerce">
+            <img src="/images/shoes1rm.png" alt="Ecommerce">
 
         </div>
     </main>
 
     <!-- Product Categories Section -->
-    <section class="products-section" id="Collections">
+
+    <section id="Collections">
         <!-- Shoes Card -->
-        <a href="/product/shoes/user_view">
-            <div class="glowing-card product-card">
-                <img src="/images/shoesrm.png" alt="Shoes" class="rounded-lg mb-4">
-                <h3>Shoes</h3>
+        <h2 class="section-title">Explore Our Collections</h2>
+        <p class="section-subtitle">Having Different Qualities of Product that build trusts and Show quality.</p>
+        <div class="collection_cards products-section">
+
+
+            <a href="/user_view/product/shoes">
+                <div class="glowing-card product-card">
+                    <img src="/images/shoes1rm.png" alt="Shoes" class="rounded-lg mb-4">
+                    <h3>Shoes</h3>
+                </div>
+            </a>
+            <!-- Clothing Card -->
+            <a href="/user_view/product/clothing">
+                <div class="glowing-card product-card">
+                    <img src="/images/clothing.avif" alt="Clothing" class="rounded-lg mb-4">
+                    <h3>Clothing</h3>
+                </div>
+            </a>
+            <!-- Accessories Card -->
+            <a href="/user_view/product/accessories">
+                <div class="glowing-card product-card">
+                    <img src="/images/accessories.jpg" alt="Accessories" class="rounded-lg mb-4">
+                    <h3>Accessories</h3>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <section class="testimonial-section"  id="testonomials">
+        <h2 class="section-title">What Our Customers Say</h2>
+        <p class="section-subtitle">Read reviews from the G.R RepZ community that trusts quality.</p>
+
+        <div class="carousel-wrapper">
+            <div class="slider-container" id="slider-container">
+                <!-- Testimonial Card 1 -->
+                <div class="testimonial-card active">
+                    <span class="quote-icon">"</span>
+                    <p class="testimonial-text">"Unbelievable quality for the price. My 'Cosmic Runners' feel
+                        premium and handle my intense cross-training sessions with ease. G.R RepZ is now my go-to
+                        for performance gear. The fit is perfect!"</p>
+                    <div class="reviewer-info">
+                        <img src="https://placehold.co/50x50/371752/ffffff?text=A" class="reviewer-avatar"
+                            alt="Reviewer Avatar">
+                        <div class="reviewer-details">
+                            <strong>Alex J.</strong>
+                            <span>Elite Runner, CA</span>
+                        </div>
+                        <span class="star-rating">★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- Testimonial Card 2 -->
+                <div class="testimonial-card">
+                    <span class="quote-icon">"</span>
+                    <p class="testimonial-text">"I was skeptical about ordering online, but the 'Galaxy Hoodie'
+                        exceeded all expectations. It's incredibly comfortable, and the stitching is flawless.
+                        Customer service was also quick and helpful!"</p>
+                    <div class="reviewer-info">
+                        <img src="https://placehold.co/50x50/371752/ffffff?text=K" class="reviewer-avatar"
+                            alt="Reviewer Avatar">
+                        <div class="reviewer-details">
+                            <strong>Kira M.</strong>
+                            <span>Design Student, NY</span>
+                        </div>
+                        <span class="star-rating">★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- Testimonial Card 3 -->
+                <div class="testimonial-card">
+                    <span class="quote-icon">"</span>
+                    <p class="testimonial-text">"The sizing chart was spot on, which is rare! I appreciate the
+                        detailed product pages. My 'Void Joggers' are the most durable and stylish pair I own.
+                        Fantastic value and fast shipping."</p>
+                    <div class="reviewer-info">
+                        <img src="https://placehold.co/50x50/371752/ffffff?text=Z" class="reviewer-avatar"
+                            alt="Reviewer Avatar">
+                        <div class="reviewer-details">
+                            <strong>Zain P.</strong>
+                            <span>Fitness Coach, UK</span>
+                        </div>
+                        <span class="star-rating">★★★★<span style="color: rgba(255, 255, 255, 0.3);">★</span></span>
+                    </div>
+                </div>
+
+                <!-- Testimonial Card 4 -->
+                <div class="testimonial-card">
+                    <span class="quote-icon">"</span>
+                    <p class="testimonial-text">"Absolutely love the dark aesthetic and the quality of the
+                        materials. The 'Nebula Cap' is my favorite accessory now. It feels expensive and looks
+                        slick. Will definitely be buying more from G.R RepZ."</p>
+                    <div class="reviewer-info">
+                        <img src="https://placehold.co/50x50/371752/ffffff?text=L" class="reviewer-avatar"
+                            alt="Reviewer Avatar">
+                        <div class="reviewer-details">
+                            <strong>Laura S.</strong>
+                            <span>Software Dev, TX</span>
+                        </div>
+                        <span class="star-rating">★★★★★</span>
+                    </div>
+                </div>
+
+                <!-- Testimonial Card 5 -->
+                <div class="testimonial-card">
+                    <span class="quote-icon">"</span>
+                    <p class="testimonial-text">"Durable, comfortable, and stylish. Three checks! The sneakers I
+                        bought are getting daily use and still look brand new. A genuine hidden gem in the online
+                        retail world. Keep up the great work!"</p>
+                    <div class="reviewer-info">
+                        <img src="https://placehold.co/50x50/371752/ffffff?text=E" class="reviewer-avatar"
+                            alt="Reviewer Avatar">
+                        <div class="reviewer-details">
+                            <strong>Ethan R.</strong>
+                            <span>Musician, AUS</span>
+                        </div>
+                        <span class="star-rating">★★★★★</span>
+                    </div>
+                </div>
             </div>
-        </a>
-        <!-- Clothing Card -->
-        <a href="/product/clothing/user_view">
-            <div class="glowing-card product-card">
-                <img src="/images/clothing.avif" alt="Clothing" class="rounded-lg mb-4">
-                <h3>Clothing</h3>
-            </div>
-        </a>
-        <!-- Accessories Card -->
-        <a href="/product/accessories/user_view">
-            <div class="glowing-card product-card">
-                <img src="/images/accessories.jpg" alt="Accessories" class="rounded-lg mb-4">
-                <h3>Accessories</h3>
-            </div>
-        </a>
+
+            <!-- Navigation Buttons -->
+            <button id="prev-btn" class="nav-button" aria-label="Previous Testimonial">&leftarrow;</button>
+            <button id="next-btn" class="nav-button" aria-label="Next Testimonial">&rightarrow;</button>
+        </div>
+
+        <!-- Indicators -->
+        <div class="indicators" id="indicators">
+            <!-- Dots will be generated by JS -->
+        </div>
     </section>
 
     <section class="formSection" id="contact-us">
         <div class="right_formSection">
-            <img src="/images/contactusRm.png" alt="" srcset="">
+            <img src="/images/form1.png" alt="" srcset="">
         </div>
         <div class="left_formSection">
 
@@ -174,3 +192,148 @@
 
         </div>
     </section>
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sliderContainer = document.getElementById('slider-container');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const indicatorsEl = document.getElementById('indicators');
+            const cards = Array.from(sliderContainer.querySelectorAll('.testimonial-card'));
+            const totalCards = cards.length;
+            let currentIndex = 0;
+            let cardsPerView = 1; // Default for mobile
+
+            // --- Core Functions ---
+
+            function getCardsPerView() {
+                const width = window.innerWidth;
+                if (width >= 1024) return 3;
+                if (width >= 768) return 2;
+                return 1;
+            }
+
+            function updateSliderPosition() {
+                cardsPerView = getCardsPerView();
+
+                // Calculate the total number of valid slide steps
+                // If we show 3 cards, the last step is totalCards - 3
+                const maxIndex = Math.max(0, totalCards - cardsPerView);
+
+                // Ensure currentIndex doesn't exceed maxIndex
+                if (currentIndex > maxIndex) {
+                    currentIndex = maxIndex;
+                }
+
+                // Card width relative to its container (100% / cardsPerView), plus margin adjustment
+                // We use a simpler 100% card width * current index since CSS handles the flex basis for multiple cards.
+                const offset = -currentIndex * (100 / cardsPerView);
+                sliderContainer.style.transform = `translateX(${offset}%)`;
+
+                updateIndicators();
+                updateCardActiveStates();
+            }
+
+            function updateCardActiveStates() {
+                // Reset active states for all cards
+                cards.forEach((card, index) => {
+                    card.classList.remove('active');
+                });
+
+                // Set active states for visible cards (for visual glow effect)
+                for (let i = 0; i < cardsPerView; i++) {
+                    if (cards[currentIndex + i]) {
+                        cards[currentIndex + i].classList.add('active');
+                    }
+                }
+            }
+
+            function goToSlide(index) {
+                cardsPerView = getCardsPerView();
+                const maxIndex = Math.max(0, totalCards - cardsPerView);
+                currentIndex = Math.min(Math.max(0, index), maxIndex);
+                updateSliderPosition();
+            }
+
+            function nextSlide() {
+                cardsPerView = getCardsPerView();
+                const maxIndex = Math.max(0, totalCards - cardsPerView);
+
+                if (currentIndex < maxIndex) {
+                    goToSlide(currentIndex + 1);
+                } else {
+                    // Loop back to the start
+                    goToSlide(0);
+                }
+            }
+
+            function prevSlide() {
+                cardsPerView = getCardsPerView();
+                const maxIndex = Math.max(0, totalCards - cardsPerView);
+
+                if (currentIndex > 0) {
+                    goToSlide(currentIndex - 1);
+                } else {
+                    // Loop to the end
+                    goToSlide(maxIndex);
+                }
+            }
+
+            // --- Indicators ---
+
+            function generateIndicators() {
+                indicatorsEl.innerHTML = '';
+                const visibleSteps = Math.max(1, totalCards - getCardsPerView() + 1);
+
+                for (let i = 0; i < visibleSteps; i++) {
+                    const dot = document.createElement('div');
+                    dot.classList.add('indicator-dot');
+                    if (i === currentIndex) {
+                        dot.classList.add('active');
+                    }
+                    dot.setAttribute('data-index', i);
+                    dot.addEventListener('click', () => goToSlide(i));
+                    indicatorsEl.appendChild(dot);
+                }
+            }
+
+            function updateIndicators() {
+                // Regenerate indicators on resize because the number of dots changes
+                // based on cardsPerView.
+                generateIndicators();
+
+                const dots = indicatorsEl.querySelectorAll('.indicator-dot');
+                dots.forEach(dot => dot.classList.remove('active'));
+
+                const currentDot = indicatorsEl.querySelector(`[data-index="${currentIndex}"]`);
+                if (currentDot) {
+                    currentDot.classList.add('active');
+                }
+            }
+
+            // --- Event Listeners and Initialization ---
+
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+
+            // Re-calculate layout on window resize
+            window.addEventListener('resize', () => {
+                updateSliderPosition();
+                generateIndicators(); // Regenerate dots based on new window size
+            });
+
+            // Auto-slide functionality (optional)
+            let autoSlideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+
+            // Pause auto-slide when hovering over the carousel
+            const carouselWrapper = document.querySelector('.carousel-wrapper');
+            carouselWrapper.addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
+            carouselWrapper.addEventListener('mouseleave', () => autoSlideInterval = setInterval(nextSlide, 5000));
+
+            // Initial setup
+            updateSliderPosition();
+            generateIndicators();
+        });
+    </script>

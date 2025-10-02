@@ -19,8 +19,11 @@
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "joi": "^18.0.0",
+    "joi-objectid": "^4.0.2",
     "jsonwebtoken": "^9.0.2",
+    "method-override": "^3.0.0",
     "mongoose": "^8.17.1",
+    "redis": "^5.8.2",
     "resend": "^6.0.1",
     "socket.io": "^4.8.1",
     "stripe": "^18.4.0"

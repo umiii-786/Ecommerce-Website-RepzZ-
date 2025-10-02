@@ -81,10 +81,11 @@ function ListLimitedProducts(category) {
                             <h3 class="product-name">${productsToRender[i].title}</h3>
                             <div class="product-info">
                                 <span class="product-price">$${productsToRender[i].price}</span>
-                                <button class="add-to-cart-btn" onclick='addToCart(${JSON.stringify(productsToRender[i])})'>Add to Cart</button>
+                                <a class="add-to-cart-btn" href='/product/${productsToRender[i]._id}'>View Product</a>
                             </div>
                         </div>
                     `;
+                   
             productGrid.appendChild(card);
         }
         console.log(main)

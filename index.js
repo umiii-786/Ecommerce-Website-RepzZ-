@@ -1,4 +1,5 @@
 require('dotenv').config();
+const mongoConnect = require('./connection.js')
 const http = require('http')
 const express = require('express')
 const app = express()
@@ -11,25 +12,41 @@ const path = require('path')
 const engine = require('ejs-mate')
 const no_of_cpus = os.cpus().length
 const bcrypt = require('bcrypt');
+const mongoose = require('mongoose')
 const { MyError } = require('./utils/MyError')
 const { User } = require('./model/user')
 const { Order } = require('./model/order')
 const { Product } = require('./model/product')
+const { Review } = require('./model/review.js')
 const { Chat } = require('./model/chat')
+
 const saltRounds = 10;
 const { user_schema_validator } = require('./server_validation/user_schema_validation')
 const { product_schema_validator } = require('./server_validation/product_schema_validation')
-const mongoose = require('mongoose')
+const { review_schema_validation } = require('./server_validation/review_schema_validation.js')
+
+const { ConvertTokenToUser, User_To_Token } = require('./auth/authentication.js')
 const cookieParser = require('cookie-parser')
 const { Server } = require('socket.io')
 const io = new Server(server)
-const jwt = require('jsonwebtoken')
 // This is your test secret API key.
 const stripe = require('stripe')(process.env.STRIPE_TEST_SECRET_KEY);
 const { Resend } = require('resend');
-const { SocketAddress } = require('net');
+// const { SocketAddress } = require('net');
 const resend = new Resend(process.env.RESEND_API_KEY)
-mongoose.connect('mongodb://127.0.0.1:27017/ecommers_db').then(() => console.log('connected to db'))
+// mongoose.connect('mongodb://127.0.0.1:27017/ecommers_db').then(() => console.log('connected to db'))
+const { createClient } = require('redis')
+// // const client=createClient()
+// const client = createClient({
+//     username: 'default',
+//     password: '4vVHpJgD33SndSKYXqVnieV9njfBLaQ8',
+//     socket: {
+//         host: 'redis-15197.crce206.ap-south-1-1.ec2.redns.redis-cloud.com',
+//         port: 15197
+//     }
+// });
+
+// client.connect().then(()=> console.log('connected to redis server'))
 // if(cluster.isPrimary){
 //     console.log(`Primary ${process.pid} is running`);
 
@@ -43,11 +60,11 @@ let users = {}
 let adminSocketId = null
 
 io.on('connection', (socket) => {
+
     socket.on('register_user', (userID) => {
         console.log('user registered')
         users[socket.id] = userID
         console.log(users)
-        // console.log(userID)
     })
 
     socket.on("register_admin", (adminId) => {
@@ -57,48 +74,83 @@ io.on('connection', (socket) => {
 
     socket.on('message_for_admin', async ({ to, message }) => {
         if (to == 'Admin') {
-            // console.log(users[socket.id]._id)
-            let userChat = await Chat.findOne({ 'userid': users[socket.id]._id })
-            .populate('userid')
-            // console.log(userChat)
-            message_object = {
+            let userChat = await Chat.findOne({ 'userid': users[socket.id] })
+                .populate('userid')
+            let message_object = {
                 sender: 'user',
                 message: message,
                 status: 'unread'
             }
-            // console.log(message_object)
-            console.log(userChat,' userchat')
+
             if (!userChat) {
-                userChat = new Chat({ userid: users[socket.id]})
+                let user = await User.findById(users[socket.id])
+                userChat = new Chat({ userid: user })
             }
-            if (adminSocketId) {
-                message_object['status'] = 'read'
-            }
+
             userChat.last_message = message
             userChat.updated_at = Date.now()
             userChat.messages.push(message_object)
-
-            io.to(adminSocketId).emit("user_message", { from: socket.id, userChat: userChat });
             await userChat.save()
+            io.to(adminSocketId).emit("user_message", { from: socket.id, userChat: userChat });
+
         }
     })
-    socket.on("admin_reply", ({ toUserId, message }) => {
-        const clientSocketId = users[toUserId];
-        if (clientSocketId) {
-            io.to(clientSocketId).emit("private_message", { from: "admin", message });
+
+    socket.on('admin_response', async ({ to, message }) => {
+        let userChat = await Chat.findOne({ 'userid': to })
+            .populate('userid')
+        let message_object = {
+            sender: 'admin',
+            message: message,
+            status: 'unread'
         }
-    });
+        console.log(userChat, ' userchat')
+        if (!userChat) {
+            userChat = new Chat({ userid: users[socket.id] })
+        }
+        let clientSocket_id = ''
+        if (Object.values(users).includes(to)) {
+            clientSocket_id = Object.keys(users).find(key => users[key] === to);
+            message_object['status'] = 'read'
+        }
+
+        userChat.last_message = message
+        userChat.updated_at = Date.now()
+        userChat.messages.push(message_object)
+        await userChat.save()
+        console.log(userChat)
+
+
+        console.log(clientSocket_id)
+        console.log(userChat)
+        if (message_object['status'] == 'read') {
+            console.log('emit hoya admin ki trf sa ')
+            io.to(clientSocket_id).emit("admin_message", { userChat: userChat });
+
+        }
+    })
 
 });
 
+const methodOverride = require('method-override');
 app.set('view engine', 'ejs');
 app.engine('ejs', engine)
 app.set('views', path.join(__dirname, 'views'));
-app.use(express.json())
+// app.use(express.json())
+
+app.use((req, res, next) => {
+    if (req.originalUrl === "/order") {
+        next();
+    } else {
+        express.json()(req, res, next);
+    }
+});
+
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(cookieParser())
 app.use(flash())
+app.use(methodOverride('_method'))
 app.use(expressSesison({
     secret: 'hellooworld',
     resave: false,
@@ -112,59 +164,52 @@ app.use((req, res, next) => {
 })
 
 app.use(ConvertTokenToUser)
-async function ConvertTokenToUser(req, res, next) {
-    let token = req.cookies?.token || null
-    console.log(token)
-    // console.log('in the middleware ', token)
-    if (token == null) {
-        res.locals.user = null;
-        return next()
-    }
-    const current_user = await jwt.verify(token, secret_key)
-    req.user = current_user
-    res.locals.user = req.user;
-    // console.log(req.user)
-    next()
-}
 
-const secret_key = 'Helloworldisthebestjokeforever123'
-async function User_To_Token(user) {
-    console.log(user)
-    const token = await jwt.sign({
-        _id: user._id,
-        username: user.username,
-        Role: user.Role
-    }, secret_key)
-    console.log(token)
-    return token;
-}
 
-function CheckAdminLogin(req, res, next) {
-    let redirect_url = '/admin/login'
-    return IsLogin(req, res, next, redirect_url)
-}
+// function CheckAdminLogin(req, res, next) {
+//     let redirect_url = '/admin/login'
+//     return IsLogin(req, res, next, redirect_url)
+// }
 
-function CheckUserLogin(req, res, next) {
-    let redirect_url = '/user/login'
-    return IsLogin(req, res, next, redirect_url)
-}
+// function CheckUserLogin(req, res, next) {
+//     let redirect_url = '/user/login'
+//     return IsLogin(req, res, next, redirect_url)
+// }
 
-function IsLogin(req, res, next, redirect_url) {
+// function IsLogin(req, res, next, redirect_url) {
+//     console.log(req.user)
+//     if (req.user) {
+//         return next()
+//     }
+//     return res.redirect(redirect_url)
+// }
+
+function IsLogin(req, res, next) {
     console.log(req.user)
     if (req.user) {
         return next()
     }
-    return res.redirect(redirect_url)
+
+    return res.redirect('/login')
 }
 
 
 async function IsAdmin(req, res, next) {
     if (req.user.Role == 'Admin') {
-        next()
+        return next()
     }
-    let redirect_url = req.get('Referrer').split('800')[0]
-    return res.redirect('/admin/login')
+    // let redirect_url = req.get('Referrer').split('800')[0]
+    return res.redirect('/login')
 }
+
+async function IsUser(req, res, next) {
+    if (req.user.Role == 'User') {
+       return next()
+    }
+    // let redirect_url = req.get('Referrer').split('800')[0]
+    return res.redirect('/login')
+}
+
 
 async function authenticate_user(req, res, next) {
     console.log('request AI ')
@@ -191,14 +236,35 @@ async function authenticate_user(req, res, next) {
 
 function Validate_user(req, res, next) {
     const check = user_schema_validator.validate(req.body)
-    req.body.Role = 'User'
     console.log(check)
     if (check.error) {
         throw new MyError(400, check.error.details[0].message)
     }
     next()
+}
 
+function ReviewValidation(req, res, next) {
+    console.log(req.params)
+    const { id } = req.params
+    req.body.productId = id
+    req.body.createdby = req.user._id
+    console.log(req.body)
+    const check = review_schema_validation.validate(req.body)
+    if (check.error) {
+        throw new MyError(400, check.error.details[0].message)
+    }
+    next()
+}
 
+function Validate_Product(req, res, next) {
+    req.body.available_sizes = req.body.available_sizes ? req.body.available_sizes.split(',') : []
+    console.log(req.body)
+    const check = product_schema_validator.validate(req.body)
+    console.log(check)
+    if (check.error) {
+        throw new MyError(400, check.error.details[0].message)
+    }
+    next()
 }
 
 // User Routes 
@@ -208,20 +274,32 @@ app.get('/', (req, res) => {
     res.render('pages/index.ejs', { user: req.user })
 })
 
-app.get('/user/login', (req, res) => {
-    res.render('BackendPages/login.ejs', { purpose: 'User' })
+app.get('/user_view/product/:category_name', async (req, res) => {
+    let product_name = req.params.category_name
+    console.log(product_name)
+    product_name = product_name.charAt(0).toUpperCase() + product_name.slice(1);
+    const AllProducts = await Product.find({ category: product_name })
+    const categories = await Product.distinct('subCategory', { category: product_name })
+    console.log('received ', AllProducts)
+    return res.render('pages/Product.ejs', { category: product_name, AllProducts: AllProducts, categories: categories })
 })
 
-app.post('/user/login', authenticate_user, async (req, res) => {
+
+app.get('/login', (req, res) => {
+    res.render('BackendPages/login.ejs')
+})
+
+app.post('/login', authenticate_user, async (req, res) => {
     const token = await User_To_Token(req.user)
     res.cookie('token', token)
-    res.redirect('/')
+    return res.redirect('/')
 })
 
-app.get('/user/register', (req, res) => {
-    res.render('BackendPages/register.ejs')
+app.get('/register', (req, res) => {
+    return res.render('BackendPages/register.ejs')
 })
-app.post('/user/register', Validate_user, async (req, res) => {
+
+app.post('/register', Validate_user, async (req, res) => {
     const data = req.body
     const check_exist = await User.find({ username: data.username })
     if (check_exist.length > 0) {
@@ -233,31 +311,27 @@ app.post('/user/register', Validate_user, async (req, res) => {
     const result = await User.create(data)
     console.log('user created')
     req.flash('success', 'User Created Success Fully')
-    res.redirect('/user/login')
+    return res.redirect('/user/login')
 })
 
-app.get('/user/logout', (req, res) => {
+app.get('/logout', (req, res) => {
     if (req.user) {
         res.clearCookie("token");
     }
     return res.redirect('/')
+})
 
+app.get('/user/:id',IsLogin,IsUser,async(req, res) => {
+    const orders=await Order.find({'created_by':req.user._id}).populate('created_by')
+    const chats=await Chat.findOne({userid:req.user._id})
+    console.log(orders)
+    return res.render('pages/user_profile.ejs',{orders,chats})
 })
-app.get('/user/:id', (req, res) => {
-    res.render('pages/user_profile.ejs')
-})
-app.get('/product/:category_name/user_view', async (req, res) => {
-    let product_name = req.params.category_name
-    product_name = product_name.charAt(0).toUpperCase() + product_name.slice(1);
-    const AllProducts = await Product.find({ category: product_name })
-    const categories = await Product.distinct('subCategory', { category: product_name })
-    return res.render('pages/Product.ejs', { category: product_name, AllProducts: AllProducts, categories: categories })
-})
+
 
 
 app.post('/create-checkout-session', IsLogin, async (req, res) => {
     let items = JSON.parse(req.body.items)
-    console.log('after Parsed', items)
     let itemsData = []
     for (let i = 0; i < items.length; i++) {
 
@@ -272,29 +346,25 @@ app.post('/create-checkout-session', IsLogin, async (req, res) => {
             },
             quantity: items[i].quantity,
         }
+
         itemsData.push(item)
 
     }
 
-    console.log(itemsData)
     const session = await stripe.checkout.sessions.create({
         line_items: itemsData,
         mode: 'payment',
         success_url: `http://localhost:800/success`,
         cancel_url: `http://localhost:800/cancel`,
+        metadata: {
+            userId: req.user._id.toString()  // attach your user id
+        }
     });
-    console.log(session)
     res.redirect(303, session.url);
 });
 
-app.post('/order', IsLogin, (req, res) => {
-    console.log(req.body)
-    console.log(req.user)
-    res.send('order created')
-    // created_by,status,items,total
-})
 app.get('/success', async (req, res) => {
-    console.log('success', req)
+    console.log('success', req.body)
     await resend.emails.send({
         from: 'onboarding@resend.dev',
         to: 'umiii215020@gmail.com',
@@ -303,6 +373,7 @@ app.get('/success', async (req, res) => {
     })
     res.render("pages/success.ejs")
 })
+
 app.post('/cancel', (req, res) => {
     console.log('cancel', req)
     res.send('failure')
@@ -317,24 +388,33 @@ app.post('/cancel', (req, res) => {
 
 // Backend URls;
 
-app.get('/admin/login', (req, res) => {
-    req.session.previous_url = req.url
-    res.render('BackendPages/login.ejs', { purpose: 'Admin' })
-})
+// app.get('/admin/login', (req, res) => {
+//     req.session.previous_url = req.url
+//     res.render('BackendPages/login.ejs', { purpose: 'Admin' })
+// })
 
-app.post('/admin/login', authenticate_user, async (req, res) => {
-    const token = await User_To_Token(req.user)
-    console.log(token)
-    res.cookie('token', token)
-    res.redirect('/dashboard')
-})
+// app.post('/admin/login', authenticate_user, async (req, res) => {
+//     const token = await User_To_Token(req.user)
+//     console.log(token)
+//     res.cookie('token', token)
+//     res.redirect('/dashboard')
+// })
 
-
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard',IsLogin,IsAdmin ,(req, res) => {
     res.render('BackendPages/dashboard.ejs')
 })
 
-app.get('/product', async (req, res) => {
+app.get('/product', IsLogin,IsAdmin,(req, res) => {
+    res.render('BackendPages/add_product.ejs')
+})
+
+app.post('/product',IsLogin, IsAdmin,Validate_Product, async (req, res) => {
+    const product = await Product.create(req.body)
+    req.flash('success', 'Product Added SuccessFully')
+    return res.redirect('/product')
+})
+
+app.get('/product/manage', IsLogin ,IsAdmin,async (req, res) => {
     console.log(req.query)
     let filter = {}
     for (const key in req.query) {
@@ -348,39 +428,134 @@ app.get('/product', async (req, res) => {
     res.render('BackendPages/manage_Product.ejs', { AllProducts: AllProducts })
 })
 
-app.get('/add_product', (req, res) => {
-    res.render('BackendPages/add_product.ejs')
+app.get('/product/:id', IsLogin,async (req, res) => {
+    const { id } = req.params
+    const product = await Product.findById(id)
+    const reviews = await Review.find({ productId: id }).populate('createdby')
+    console.log(id)
+    console.log(reviews)
+    console.log('in the particular product')
+    return res.render('pages/each_product.ejs', { product, reviews })
 })
 
-function Validate_Product(req, res, next) {
-    req.body.available_sizes = req.body.available_sizes.split(',')
-    console.log(req.body)
-    const check = product_schema_validator.validate(req.body)
-    console.log(check)
-    if (check.error) {
-        throw new MyError(400, check.error.details[0].message)
+app.get('/product/:id/edit', IsLogin,IsAdmin ,async (req, res) => {
+    const { id } = req.params
+    const product = await Product.findById(id)
+    console.log(product)
+    console.log('product edited ')
+    res.render('BackendPages/edit_product.ejs', { product })
+})
+
+app.put('/product/:id',IsLogin,IsAdmin ,Validate_Product, async (req, res) => {
+    const { prod_id } = req.params
+    try {
+
+        const updated_data = await Product.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
+    } catch (error) {
+        throw new MyError(500, 'Internal Server Error Occured')
     }
-    next()
 
-}
-app.post('/add_product', Validate_Product, async (req, res) => {
-    const product = await Product.create(req.body)
-    req.flash('success', 'Product Added SuccessFully')
-    res.redirect('/add_product')
-})
-app.get('/product/:id', (req, res) => {
-
-})
-app.put('/product/:id', (req, res) => {
-
+    console.log(updated_data)
+    return res.redirect(`/product/${prod_id}`)
 })
 
+app.delete('/product/:id',IsLogin,IsAdmin, async (req, res) => {
+    const { id } = req.params
+    await Product.findByIdAndDelete(id)
+    console.log(id)
+    res.redirect('/product/manage')
+})
+
+app.post('/product/:id/review',IsLogin, IsUser ,ReviewValidation, async (req, res) => {
+    const review = await Review.create(req.body)
+
+    console.log(req.body)
+    return res.redirect(`/product/${req.body.productId}`)
+})
+
+// 2. Stripe webhook (this is where you store in DB)
+app.post('/order',express.raw({ type: 'application/json' }), async (req, res) => {
+    const sig = req.headers['stripe-signature'];
+    let event;
+
+    try {
+        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    } catch (err) {
+        console.log(`Webhook error: ${err.message}`);
+        throw new MyError(400, err.message)
+    }
+
+    // Handle event type
+    if (event.type === 'checkout.session.completed') {
+        console.log('order completed ')
+        const session = event.data.object;
+        const sessionWithLineItems = await stripe.checkout.sessions.retrieve(
+            session.id,
+            {
+                expand: ['line_items']
+            }
+        );
+
+        let products_list = sessionWithLineItems.line_items.data
+        let items = []
+        let total_price = 0
+
+        for (let i = 0; i < products_list.length; i++) {
+            let singleItem = {}
+            singleItem['item_name'] = products_list[i].description
+            singleItem['price'] = products_list[i].amount_total / 100
+            singleItem['quantity'] = products_list[i].quantity
+            total_price += singleItem['price']
+
+            console.log(singleItem)
+            items.push(singleItem)  // ✅ use push in JS
+        }
+
+        console.log(items)
+        console.log("Total Price:", total_price)
+        const createdBy = session.metadata?.userId || null;
+        let order_object = {
+            "created_by":createdBy,  // make sure req.user exists
+            "status": 'Pending',
+            "total": total_price,
+            "items": items
+        };
+        console.log("✅ Order Object:", order_object);
+
+        try {
+
+            const order = new Order(order_object)
+            console.log('order is ', order)
+            await order.save()
+        }
+        catch (err) {
+            throw new MyError(500, 'Something Went Wrong with DataBase')
+        }
 
 
+    }
 
-app.get('/order/manage', (req, res) => {
-    res.render('BackendPages/orderpage.ejs')
+    console.log('order done')
+    res.sendStatus(200);
+});
 
+app.put('/order/:id',IsLogin,IsAdmin,async(req,res)=>{
+    const status=req.body.status
+    console.log(req.body)
+    const {id}=req.params
+    console.log(id)
+    const order=await Order.findByIdAndUpdate(id,{status:status})
+    res.redirect('/order/manage')
+})
+
+app.get('/order/manage', IsLogin,IsAdmin,async(req, res) => {
+    const orders=await Order.find({}).populate('created_by');
+    console.log(orders)
+    res.render('BackendPages/manage_order.ejs',{orders})
 })
 
 app.get('/sales', (req, res) => {
@@ -434,10 +609,16 @@ app.get('/sales', (req, res) => {
 
 //     return chats
 // }
-app.get('/messages', async (req, res) => {
+app.get('/messages',IsLogin,IsAdmin ,async (req, res) => {
+    // let chats=await client.get('chat')
+    // chats=JSON.parse(chats)
+    // console.log(chats)
+    // if(!chats){
     const chats = await Chat.find({}).populate('userid')
-
     console.log(chats)
+    // client.set('chat',JSON.stringify(chats))
+    // }
+    // console.log(chats)
     res.render('BackendPages/customer_messages.ejs', { chats })
 })
 

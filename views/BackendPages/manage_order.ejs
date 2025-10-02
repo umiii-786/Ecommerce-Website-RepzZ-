@@ -1,0 +1,96 @@
+<%- layout('backend_boilerplate.ejs') %>
+    <link rel="stylesheet" href="/CSS/orderpage.css">
+    <style>
+        .options_status {
+            padding: 10px;
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 0px;
+            right: 50px;
+            z-index: 10;
+            background: #645e71f5;
+            height: 80px;
+            align-items: center;
+            justify-content: center;
+            justify-content: space-between;
+            width: 10%;
+        }
+
+        .status_change_button {
+            background: #250b37;
+            border: none;
+            color: #bbb3b3;
+            width: 100%;
+            padding: 4px 0px;
+            cursor: pointer;
+        }
+        @media screen and (max-width:770px) {
+            #order-table-body{
+                display: flex;
+                justify-content: space-between;
+                    width: 100%;
+    overflow-x: scroll;
+            }
+            tr{
+                display: flex;
+                flex-direction: column;
+                border: 1px solid #463254;
+            }
+            .order-table{
+                display: flex;
+            }
+        }
+
+    </style>
+    <div class="Order_container">
+        <div class="page-header">
+            <h1 class="page-title">Let's Manage Your Orders</h1>
+        </div>
+
+        <!-- Order List Section -->
+        <section class="order-list-section">
+            <div class="search-container">
+                <div class="search-input-group">
+                    <label for="order-id" class="search-label">Order ID</label>
+                    <input type="text" id="order-id" class="search-input" placeholder="Search by Order ID...">
+                </div>
+                <div class="search-input-group">
+                    <label for="status" class="search-label">Status</label>
+                    <select id="status" class="search-select">
+                        <option value="">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="order-table-container">
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer Name</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="order-table-body">
+                        <!-- Order rows will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Status Message Box -->
+        <div id="status-message" class="message-box"></div>
+    </div>
+    <script>
+        const allOrders = <%- JSON.stringify(orders) %>;
+        console.log(allOrders)
+    </script>
+    <script src="/js/manage_order.js"></script>

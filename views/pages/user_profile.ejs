@@ -31,7 +31,7 @@
         body {
             font-family: 'Inter', sans-serif;
             background: var(--dark-background);
-            height: 100vh;
+            min-height: 100vh;
             color: var(--main-text-color);
             display: flex;
             flex-direction: column;
@@ -47,12 +47,11 @@
             border-radius: 1rem;
             display: flex;
             gap: 3rem;
+            flex-direction: column;
+            min-height: 90vh;
+            padding-bottom: 20px;
         }
 
-        .container>div {
-            width: 30%;
-            height: 470px;
-        }
 
 
 
@@ -77,6 +76,7 @@
             border-bottom: 2px solid var(--glowing-purple);
             padding-bottom: 0.5rem;
             margin-bottom: 1rem;
+            text-align: center;
         }
 
         .order-list {
@@ -376,7 +376,10 @@
         .profileIntro {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            /* gap: 1rem; */
+            width: 300px;
+            box-shadow: 0px 0px 10px black;
+            padding: 10px 30px;
         }
 
         .info {
@@ -392,6 +395,26 @@
         .info>h3>span {
             color: var(--glowing-purple);
         }
+
+        .orders_and_chat_section {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .orders_and_chat_section>div {
+            width: 40%;
+            height: 470px;
+        }
+
+        .intro_and_image {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .intro_and_image>img {
+            width: 400px;
+        }
     </style>
 </head>
 
@@ -399,45 +422,56 @@
     <%- include('../includes/navbar.ejs') %>
         <%- include('../includes/cart.ejs') %>
             <div class="container">
-                <div class="profileIntro">
-                    <h1 class="section-title">My Profile</h1>
-                    <div class="info">
-                        <h3><span>Name :</span>
-                            <%= user.username %>
-                        </h3>
-                        <h3><span>Email :</span>
-                            <%= user.email %>
-                        </h3>
-                        <h3><span>Total Orders :</span> 10</h3>
-                        <h3><span>Shipped Orders :</span> 10</h3>
-                        <h3><span>Cancelled Orders :</span> 10</h3>
-                    </div>
-                </div>
+                <div class="intro_and_image">
 
-                <!-- Orders Section -->
-                <div class="orders-section">
-                    <h2 class="section-title">My Orders</h2>
-                    <ul class="order-list" id="order-list">
-                        <!-- Orders will be dynamically populated here -->
-                    </ul>
-                </div>
-
-                <!-- Chat Section -->
-                <div class="chat-section">
-                    <h2 class="section-title">Chat with Admin</h2>
-                    <div class="chat-window" id="chat-window">
-                        <!-- Chat messages will appear here -->
-                        <div class="chat-bubble admin-bubble">Hello! How can I help you today regarding your orders or
-                            account?
+                    <div class="profileIntro">
+                        <h1 class="section-title">My Profile</h1>
+                        <div class="info">
+                            <h3><span>Name :</span>
+                                <%= user.username %>
+                            </h3>
+                            <h3><span>Email :</span>
+                                <%= user.email %>
+                            </h3>
+                            <h3><span>Total Orders :</span> 10</h3>
+                            <h3><span>Shipped Orders :</span> 10</h3>
+                            <h3><span>Cancelled Orders :</span> 10</h3>
                         </div>
                     </div>
-                    <div class="chat-input-container">
-                        <input type="text" id="chat-input" class="chat-input" placeholder="Type your message here...">
-                        <button id="send-button" class="send-button" onclick="SendUserMessage()">Send</button>
+                    <img src="/images/orderSummary.png" alt="summary" srcset="">
+                </div>
+
+                <div class="orders_and_chat_section">
+
+
+                    <!-- Orders Section -->
+                    <div class="orders-section">
+                        <h2 class="section-title">My Orders</h2>
+                        <ul class="order-list" id="order-list">
+                            <!-- Orders will be dynamically populated here -->
+                        </ul>
                     </div>
+
+                    <!-- Chat Section -->
+                    <div class="chat-section">
+                        <h2 class="section-title">Chat with Admin</h2>
+                        <div class="chat-window" id="chat-window">
+                            <!-- Chat messages will appear here -->
+                            <div class="chat-bubble admin-bubble">Hello! How can I help you today regarding your orders
+                                or
+                                account?
+                            </div>
+                        </div>
+                        <div class="chat-input-container">
+                            <input type="text" id="chat-input" class="chat-input"
+                                placeholder="Type your message here...">
+                            <button id="send-button" class="send-button" onclick="SendUserMessage()">Send</button>
+                        </div>
+                    </div>
+                    <audio src="/images/messageTone.mp3" autostart="false" id="message_tone"></audio>
+
                 </div>
             </div>
-
             <!-- Cancellation Modal -->
             <div id="cancel-modal" class="modal">
                 <div class="modal-content">
@@ -453,111 +487,29 @@
                 </div>
             </div>
 
+
+
             <script src="/js/cart.js"></script>
-            <script src="/socket.io/socket.io.js"></script>
             <script>
-                const userData = <%- JSON.stringify(user) %>;
-                const chatWindow = document.getElementById('chat-window');
-
-                const socket = io();
-                socket.emit('register_user', userData._id)
-
-                function SendUserMessage() {
-                    let chatInput = document.querySelector('.chat-input')
-                    const userMessage = chatInput.value.trim();
-
-                    if (chatInput.value != "") {
-                        addMessage(userMessage, true);
-                        chatInput.value = '';
-                        console.log('emiting ',userMessage)
-                        socket.emit('message_for_admin', { "to": 'Admin', 'message': userMessage })
-                    }
-                }
-
-                function addMessage(text, isUser) {
-                    const bubble = document.createElement('div');
-                    bubble.classList.add('chat-bubble');
-                    bubble.classList.add(isUser ? 'user-bubble' : 'admin-bubble');
-                    bubble.textContent = text;
-                    chatWindow.appendChild(bubble);
-                    chatWindow.scrollTop = chatWindow.scrollHeight;
-                }
-                socket.on('reply_from_Admin',(from,message)=>{
-
-                })
+                let cart = getCart()
+                console.log(typeof cart)
+                items = cart != null ? JSON.parse(cart).length : 0;
+                console.log(items)
+                console.log(cart)
+                document.querySelector('.countCartItem').innerHTML = items
+                console.log('setting the cart')
             </script>
 
-            <!-- <script>
-            // Use a self-executing function to avoid global scope pollution
-            (function () {
-                // --- Gemini API Configuration (for demonstration) ---
-                const API_KEY = ""; // Canvas will provide this at runtime
-                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
 
+            <script>
                 // --- Dummy Data ---
-                const orders = [
-                    {
-                        id: 'ORD83728',
-                        date: '2025-08-25',
-                        total: '125.00',
-                        status: 'Shipped',
-                        products: [
-                            { name: 'Cosmic Sneakers', quantity: 1, price: 90.00 },
-                            { name: 'Moon T-shirt', quantity: 2, price: 17.50 }
-                        ]
-                    },
-                    {
-                        id: 'ORD83728',
-                        date: '2025-08-25',
-                        total: '125.00',
-                        status: 'Shipped',
-                        products: [
-                            { name: 'Cosmic Sneakers', quantity: 1, price: 90.00 },
-                            { name: 'Moon T-shirt', quantity: 2, price: 17.50 }
-                        ]
-                    },
-                    {
-                        id: 'ORD83727',
-                        date: '2025-08-22',
-                        total: '75.00',
-                        status: 'Pending',
-                        products: [
-                            { name: 'Nebula Hoodie', quantity: 1, price: 75.00 }
-                        ]
-                    },
-                    {
-                        id: 'ORD83726',
-                        date: '2025-08-20',
-                        total: '60.00',
-                        status: 'Shipped',
-                        products: [
-                            { name: 'Space Key Chain', quantity: 4, price: 15.00 }
-                        ]
-                    },
-                    {
-                        id: 'ORD83725',
-                        date: '2025-08-18',
-                        total: '25.00',
-                        status: 'Cancelled',
-                        products: [
-                            { name: 'Galaxy Gloves', quantity: 1, price: 25.00 }
-                        ]
-                    },
-                ];
+                const orders =<%- JSON.stringify(orders) %>;
+                console.log(orders)
 
                 // --- DOM Elements ---
                 const orderListEl = document.getElementById('order-list');
-                const chatWindow = document.getElementById('chat-window');
-                const chatInput = document.getElementById('chat-input');
-                const sendButton = document.getElementById('send-button');
-                const modal = document.getElementById('cancel-modal');
                 const modalOrderIdEl = document.getElementById('modal-order-id');
-                const cancellationReasonEl = document.getElementById('cancellation-reason');
-                const confirmCancelButton = document.getElementById('cancel-confirm-button');
-                const cancellationMessageEl = document.getElementById('cancellation-message');
 
-                let chatHistory = [{ role: "model", parts: [{ text: "Hello! How can I help you today regarding your orders or account?" }] }];
-                let currentOrderIdToCancel = null;
 
                 // --- Order History Functionality ---
                 function renderOrders() {
@@ -574,108 +526,115 @@
                         const orderHeaderHTML = `
                         <div class="order-header">
                             <div class="order-info">
-                                <span>Order ID: ${order.id}</span>
-                                <small>Date: ${order.date} | Total: $${order.total}</small>
+                                <span>Order ID: ${order._id.substring(0, 10)}</span>
+                                <small>Date: ${order.placed_at.split('T')[0]} | Total: $${order.total}</small>
                             </div>
                             <span class="status-badge ${statusClass}">${order.status}</span>
                         </div>
                     `;
 
-                        const orderDetailsHTML = `
-                        <div class="order-details-container">
-                            <ul class="product-list">
-                                ${order.products.map(p => `
-                                    <li class="product-item">
-                                        <span>${p.name} (x${p.quantity})</span>
-                                        <span>$${p.price.toFixed(2)} each</span>
-                                    </li>
-                                `).join('')}
-                            </ul>
-                            <button class="cancel-button" data-order-id="${order.id}">Cancel Order</button>
-                        </div>
-                    `;
 
-                        li.innerHTML = orderHeaderHTML + orderDetailsHTML;
+                        li.innerHTML = orderHeaderHTML;
                         orderListEl.appendChild(li);
-                    });
-
-                    // Attach event listeners for each order item
-                    document.querySelectorAll('.order-item').forEach(item => {
-                        item.addEventListener('click', (e) => {
-                            // Toggle product details visibility on click
-                            const detailsContainer = item.querySelector('.order-details-container');
-                            if (e.target.classList.contains('cancel-button')) {
-                                e.stopPropagation();
-                                return;
-                            }
-                            detailsContainer.classList.toggle('show');
-                        });
-                    });
-
-                    // Attach event listeners for each cancel button
-                    document.querySelectorAll('.cancel-button').forEach(button => {
-                        button.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            currentOrderIdToCancel = e.target.dataset.orderId;
-                            modalOrderIdEl.textContent = currentOrderIdToCancel;
-                            cancellationReasonEl.value = '';
-                            cancellationMessageEl.style.display = 'none';
-                            modal.style.display = 'flex';
-                        });
                     });
                 }
 
-                // --- Modal and Cancellation Functionality ---
-                document.querySelector('.close-modal').addEventListener('click', () => {
-                    modal.style.display = 'none';
-                });
-                window.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        modal.style.display = 'none';
+                // Attach event listeners for each order item
+                /*       document.querySelectorAll('.order-item').forEach(item => {
+                           item.addEventListener('click', (e) => {
+                               // Toggle product details visibility on click
+                               const detailsContainer = item.querySelector('.order-details-container');
+                               if (e.target.classList.contains('cancel-button')) {
+                                   e.stopPropagation();
+                                   return;
+                               }
+                               detailsContainer.classList.toggle('show');
+                           });
+                       });*/
+
+                /*   // Attach event listeners for each cancel button
+                   document.querySelectorAll('.cancel-button').forEach(button => {
+                       button.addEventListener('click', (e) => {
+                           e.stopPropagation();
+                           currentOrderIdToCancel = e.target.dataset.orderId;
+                           modalOrderIdEl.textContent = currentOrderIdToCancel;
+                           cancellationReasonEl.value = '';
+                           cancellationMessageEl.style.display = 'none';
+                           modal.style.display = 'flex';
+                       });
+                   });
+               }*/
+
+
+                renderOrders()
+
+                /*    const orderDetailsHTML = `
+                                  <div class="order-details-container">
+                                      <ul class="product-list">
+                                          ${order.products.map(p => `
+                                              <li class="product-item">
+                                                  <span>${p.name} (x${p.quantity})</span>
+                                                  <span>$${p.price.toFixed(2)} each</span>
+                                              </li>
+                                          `).join('')}
+                                      </ul>
+                                      <button class="cancel-button" data-order-id="${order.id}">Cancel Order</button>
+                                  </div>
+                              `;
+          
+                          */
+            </script>
+
+            <script src="/socket.io/socket.io.js"></script>
+
+            <script>
+                const userData = <%- JSON.stringify(user) %>;
+                let chats = <%- JSON.stringify(chats) %>;
+
+                const chatWindow = document.getElementById('chat-window');
+                let message_tone = document.querySelector('#message_tone');
+
+                const socket = io();
+                socket.emit('register_user', userData._id)
+
+                socket.on('admin_message', ({ userChat }) => {
+                    message_tone.play()
+                    
+                    console.log('admin send the message', userChat)
+                    chatWindow.innerHTML = ''
+                    showChat(userChat)
+                    console.log('got response from admin ', userChat)
+
+                })
+
+                function showChat(userChat) {
+                    console.log(userChat)
+                    for (let i = 0; i < userChat.messages.length; i++) {
+
+                        if (userChat.messages[i].sender == 'user') {
+                            addMessage(userChat.messages[i].message, true)
+                        }
+                        else {
+                            addMessage(userChat.messages[i].message, false)
+                        }
                     }
-                });
+                }
 
-                confirmCancelButton.addEventListener('click', async () => {
-                    const reason = cancellationReasonEl.value.trim();
-                    if (reason === '') {
-                        cancellationMessageEl.textContent = 'Please provide a reason.';
-                        cancellationMessageEl.style.display = 'block';
-                        cancellationMessageEl.style.color = " var(--accent-red)";
-                        return;
+                function SendUserMessage() {
+                    let chatInput = document.querySelector('.chat-input')
+                    const userMessage = chatInput.value.trim();
+
+                    if (chatInput.value != "") {
+                        addMessage(userMessage, true);
+                        chatInput.value = '';
+                        console.log('emiting ', userMessage)
+                        socket.emit('message_for_admin', { "to": 'Admin', 'message': userMessage })
                     }
+                }
 
-                    cancellationMessageEl.textContent = 'Submitting request...';
-                    cancellationMessageEl.style.display = 'block';
-                    cancellationMessageEl.style.color = "var(--glowing-purple)";
 
-                    // Simulate sending a cancellation request to the admin assistant
-                    const userQuery = `I want to cancel order ${currentOrderIdToCancel}. The reason is: ${reason}. Please process this for me.`;
-                    const systemPrompt = "You are a friendly and helpful e-commerce customer support agent named Readdy. Your primary goal is to process user requests, including order cancellations. When a user requests an order cancellation, you should acknowledge the request and inform them that you are processing it. Do not actually cancel the order in the dummy data. Keep responses concise and professional.";
-
-                    try {
-                        const response = await fetchWithBackoff(API_URL, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                contents: [{ role: "user", parts: [{ text: userQuery }] }],
-                                systemInstruction: { parts: [{ text: systemPrompt }] },
-                            })
-                        });
-
-                        const result = await response.json();
-                        const adminResponse = result?.candidates?.[0]?.content?.parts?.[0]?.text || "I apologize, I'm currently unable to assist with your cancellation request. Please try again later.";
-
-                        cancellationMessageEl.textContent = adminResponse;
-                        cancellationMessageEl.style.color = "var(--accent-green)";
-                    } catch (error) {
-                        console.error('Error with cancellation request:', error);
-                        cancellationMessageEl.textContent = 'An error occurred. Please try again.';
-                        cancellationMessageEl.style.color = "var(--accent-red)";
-                    }
-                });
-
-                // --- Chat Functionality ---
                 function addMessage(text, isUser) {
+                    console.log('adding the message')
                     const bubble = document.createElement('div');
                     bubble.classList.add('chat-bubble');
                     bubble.classList.add(isUser ? 'user-bubble' : 'admin-bubble');
@@ -683,86 +642,11 @@
                     chatWindow.appendChild(bubble);
                     chatWindow.scrollTop = chatWindow.scrollHeight;
                 }
+                
+                showChat(chats)
+           
+            </script>
 
-                async function sendMessage() {
-                    const userMessage = chatInput.value.trim();
-                    if (userMessage === '') return;
-
-                    addMessage(userMessage, true);
-                    chatInput.value = '';
-
-                    chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
-
-                    const loadingIndicator = document.createElement('div');
-                    loadingIndicator.classList.add('loading');
-                    loadingIndicator.textContent = 'Admin is typing...';
-                    chatWindow.appendChild(loadingIndicator);
-                    chatWindow.scrollTop = chatWindow.scrollHeight;
-
-                    try {
-                        const response = await fetchWithBackoff(API_URL, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                contents: chatHistory,
-                                systemInstruction: {
-                                    parts: [{ text: "You are a friendly and helpful e-commerce customer support agent. You answer user questions about their orders, payments, and account. You can provide general advice and check on order statuses based on the provided dummy data. Keep your responses concise and to the point. If a user asks a question about something you cannot help with, politely redirect them to other support channels. Be polite and professional. Your name is Readdy." }]
-                                },
-                            })
-                        });
-
-                        const result = await response.json();
-                        const adminResponse = result?.candidates?.[0]?.content?.parts?.[0]?.text || "I apologize, I'm currently unable to assist. Please try again later or contact our support team.";
-
-                        chatWindow.removeChild(loadingIndicator);
-
-                        addMessage(adminResponse, false);
-                        chatHistory.push({ role: "model", parts: [{ text: adminResponse }] });
-
-                    } catch (error) {
-                        console.error('Error fetching from Gemini API:', error);
-                        chatWindow.removeChild(loadingIndicator);
-                        addMessage("I'm sorry, an error occurred. Please try again.", false);
-                    }
-                }
-
-                async function fetchWithBackoff(url, options, retries = 3, delay = 1000) {
-                    for (let i = 0; i < retries; i++) {
-                        try {
-                            const response = await fetch(url, options);
-                            if (!response.ok) {
-                                if (response.status === 429 && i < retries - 1) {
-                                    await new Promise(res => setTimeout(res, delay * Math.pow(2, i)));
-                                    continue;
-                                }
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-                            return response;
-                        } catch (error) {
-                            if (i < retries - 1) {
-                                await new Promise(res => setTimeout(res, delay * Math.pow(2, i)));
-                            } else {
-                                throw error;
-                            }
-                        }
-                    }
-                }
-
-                // --- Event Listeners ---
-                sendButton.addEventListener('click', sendMessage);
-                chatInput.addEventListener('keypress', (event) => {
-                    if (event.key === 'Enter') {
-                        event.preventDefault();
-                        sendMessage();
-                    }
-                });
-
-                // --- Initial Page Load ---
-                window.onload = () => {
-                    renderOrders();
-                };
-            })();
-        </script> -->
 </body>
 
 </html>

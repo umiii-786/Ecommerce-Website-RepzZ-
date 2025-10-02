@@ -274,25 +274,13 @@
             stroke-linejoin: round;
         }
     </style>
-
-    <style>
-        @media screen and (max-width:530px) {
-            #product-form {
-                display: flex;
-                flex-direction: column;
-            }
-            .form-group{
-                    width: 100%;
-            }
-        }
-    </style>
     <div class="formContainer">
-        <h2>Add New Product</h2>
+        <h2>Let's Make Changes On Product</h2>
         <!-- Product Form -->
-        <form id="product-form" action="/product" method="post">
+        <form id="product-form" action="/product/<%= product._id %>/?_method=PUT" method="post">
             <div class="form-group">
                 <label for="category" class="form-label">Product Category</label>
-                <select id="category" class="form-select" required name="category">
+                <select id="category" class="form-select" required name="category" value="<%= product.category %>">
                     <option value="">Select a category</option>
                     <option value="Shoes">Shoes</option>
                     <option value="Clothing">Clothing</option>
@@ -301,34 +289,31 @@
             </div>
             <div class="form-group">
                 <label for="subcategory" class="form-label">Sub Category</label>
-                <input type="text" id="subcategory" class="form-input" name="subCategory"
-                    placeholder="e.g., Sneakers, Jackets, Bags" required>
+                <input type="text" id="subcategory" value="<%= product.subCategory %>" class="form-input" name="subCategory" placeholder="e.g., Sneakers, Jackets, Bags"
+                    required>
             </div>
             <div class="form-group">
                 <label for="title" class="form-label">Product Name / Title</label>
-                <input type="text" id="title" class="form-input" name="title" placeholder="e.g., Street Runner Pro"
-                    required>
+                <input type="text" id="title" value="<%= product.title %>" class="form-input" name="title" placeholder="e.g., Street Runner Pro" required>
             </div>
             <div class="form-group">
                 <label for="price" class="form-label">Product Price ($)</label>
-                <input type="number" id="price" name="price" class="form-input" placeholder="e.g., 129.99" step="0.01"
-                    required>
+                <input type="number" id="price" name="price" value="<%= product.price %>" class="form-input" placeholder="e.g., 129.99" step="0.01" required>
             </div>
 
             <div class="form-group">
                 <label for="stock" class="form-label">Available Stock</label>
-                <input type="number" id="stock" class="form-input" name='available_stocks' placeholder="e.g.,100"
-                    required>
+                <input type="number" id="stock" class="form-input" value="<%= product.available_stocks %>" name='available_stocks' placeholder="e.g.,100" required>
             </div>
 
 
             <div class="form-group">
                 <label for="image" class="form-label">Product Image URL</label>
-                <input type="url" id="image" name="img_url" class="form-input"
-                    placeholder="e.g., https://example.com/image.jpg" required>
+                <input type="url" id="image" name="img_url" value="<%= product.img_url %>" class="form-input" placeholder="e.g., https://example.com/image.jpg"
+                    required>
             </div>
 
-
+            
             <div class="dropdown-container">
                 <label for="hiddenMultiSelectValue" class="dropdown-label">Select</label>
                 <button id="multiSelectDropdownButton" type="button" class="multi-select-button">
@@ -391,7 +376,7 @@
             </div>
             <p class="error" style="text-align: center;color:
             red; font-size:15px"></p>
-            <button type="submit" class="form-button">Add Product</button>
+            <button type="submit" class="form-button">Done</button>
         </form>
 
         <!-- Status Message Box -->
@@ -400,37 +385,32 @@
 
     <script>
 
-        let productForm = document.querySelector('#product-form')
-        let error = document.querySelector('.error')
-        productForm.addEventListener('submit', (e) => {
+        let productForm=document.querySelector('#product-form')
+        let error=document.querySelector('.error')
+        let Selected_sized=<%- JSON.stringify(product) %>;
+        Selected_sized=Selected_sized.available_sizes
+        console.log('hoya ha ',Selected_sized)
+        productForm.addEventListener('submit',(e)=>{
             e.preventDefault()
             console.log(selectedMultiValues)
-            if (selectedMultiValues.length > 0) {
+            if(selectedMultiValues.length>0){
                 productForm.submit()
-            } else {
-                error.innerHTML = 'Each Product Must have One Size'
-                setTimeout(() => {
-                    error.innerHTML = ''
-                }, 3000)
+            }else{
+                error.innerHTML='Each Product Must have One Size'
+                setTimeout(()=>{
+                    error.innerHTML=''
+                },3000)
             }
         })
         function toggleDropdown(button, content) {
             content.classList.toggle("show");
         }
 
-        const multiSelectDropdownButton = document.getElementById(
-            "multiSelectDropdownButton"
-        );
-        const multiSelectDropdownContent = document.getElementById(
-            "multiSelectDropdownContent"
-        );
+        const multiSelectDropdownButton = document.getElementById("multiSelectDropdownButton");
+        const multiSelectDropdownContent = document.getElementById( "multiSelectDropdownContent");
         const selectedMultiValuesSpan = document.getElementById("selectedMultiValues");
-        const hiddenMultiSelectValueInput = document.getElementById(
-            "hiddenMultiSelectValue"
-        );
-        const multiSelectOptions = multiSelectDropdownContent.querySelectorAll(
-            ".multi-select-option"
-        );
+        const hiddenMultiSelectValueInput = document.getElementById("hiddenMultiSelectValue");
+        const multiSelectOptions = multiSelectDropdownContent.querySelectorAll(".multi-select-option");
 
         let selectedMultiValues = [];
 
@@ -480,7 +460,14 @@
                 updateMultiSelectDisplay();
             });
         });
-
+        
+        multiSelectOptions.forEach((option) => {
+            console.log(Selected_sized)
+            if(Selected_sized.includes(option.dataset.value)){
+                option.click()
+            }
+        })
+       
         updateMultiSelectDisplay();
 
         window.addEventListener("click", function (event) {
